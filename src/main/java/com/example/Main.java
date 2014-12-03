@@ -58,7 +58,7 @@ public class Main {
 
 		hopper.importOrLoad();
 
-		/*System.out.println(hopper.getGraph().toDetailsString());
+		System.out.println(hopper.getGraph().toDetailsString());
 
 		System.out.println(hopper.getGraph().getAllEdges());
 
@@ -66,9 +66,10 @@ public class Main {
 
 		while (edges.next()) {
 			System.out.println(edges);
-		}*/
+			System.out.println(edges.getWalkability());
+		}
 
-        GHResponse response = hopper.route(new GHRequest(52.0, 9.0, 41.2, 10.431).setVehicle("car"));
+        GHResponse response = hopper.route(new GHRequest(52.0, 9.0, 41.2, 10.431));
         
         System.out.println(response.getPoints());
         

@@ -23,6 +23,7 @@ import gnu.trove.list.array.TLongArrayList;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import java.util.Map;
 
 /**
@@ -33,6 +34,7 @@ import java.util.Map;
 public class OSMWay extends OSMElement
 {
     protected final TLongList nodes = new TLongArrayList(5);
+    protected int walkability = 0;
 
     /**
      * Constructor for XML Parser
@@ -46,7 +48,31 @@ public class OSMWay extends OSMElement
         return way;
     }
 
-    public OSMWay( long id )
+    protected void readTags( XMLStreamReader parser ) throws XMLStreamException
+    {
+        int event = parser.getEventType();
+        while (event != XMLStreamConstants.END_DOCUMENT && parser.getLocalName().equals("tag"))
+        {
+            if (event == XMLStreamConstants.START_ELEMENT)
+            {
+                // read tag
+                String key = parser.getAttributeValue(null, "k");
+                String value = parser.getAttributeValue(null, "v");
+                // ignore tags with empty values
+                
+                if(key.equals("walkability")) {
+                	walkability = Integer.parseInt(value);
+                	System.out.println(walkability);
+                }                
+                if (value != null && value.length() > 0)
+                    setTag(key, value);
+            }
+
+            event = parser.nextTag();
+        }
+    }
+
+	public OSMWay( long id )
     {
         super(id, WAY);
     }
@@ -77,4 +103,8 @@ public class OSMWay extends OSMElement
     {
         return "Way (" + getId() + ", " + nodes.size() + " nodes)";
     }
+
+	public int getWalkability() {
+		return walkability;
+	}
 }

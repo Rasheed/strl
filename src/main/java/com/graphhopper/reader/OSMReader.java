@@ -350,9 +350,8 @@ public class OSMReader implements DataReader
 
         long relationFlags = getRelFlagsMap().get(way.getId());
 
-        Random random = new Random();
-        int walkability = random.nextInt(100);
-        
+        int walkability = way.getWalkability();
+                
         // TODO move this after we have created the edge and know the coordinates => encodingManager.applyWayTags
         // estimate length of the track e.g. for ferry speed calculation
         TLongList osmNodeIds = way.getNodes();
