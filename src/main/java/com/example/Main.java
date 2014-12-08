@@ -8,7 +8,11 @@ import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.routing.util.AllEdgesIterator;
 import com.graphhopper.routing.util.EncodingManager;
+import com.graphhopper.storage.GraphBuilder;
+import com.graphhopper.storage.GraphStorage;
+import com.graphhopper.storage.NodeAccess;
 import com.graphhopper.util.CmdArgs;
+import com.strl.hopper.StrlHopper;
 
 /**
  *
@@ -50,34 +54,37 @@ public class Main {
 		// http://wiki.eclipse.org/Jetty/Reference/Jetty_Classloading
 		root.setParentLoaderPriority(true);
 
-		GraphHopper hopper = new GraphHopper().forServer()
-				.setOSMFile("src/main/resources/test-osm2.xml")
-				.setStoreOnFlush(false)
-				.setEncodingManager(new EncodingManager("CAR,FOOT"))
-				.setCHEnable(false).init(new CmdArgs());
+    	StrlHopper hopper = new StrlHopper();
+		
+		GHResponse response = hopper.route(new GHRequest(51.524559, -0.13404, 51.500729, -0.124625)
+				.setVehicle("foot"));
+        		
+		System.out.println(response.getPoints());
+        
+		//System.out.println(path.getJsonObject());
 
-		hopper.importOrLoad();
+		server.setHandler(root);
 
-		System.out.println(hopper.getGraph().toDetailsString());
+		server.start();
+		server.join();
+	}
+	
+	public static void printGraph(GraphStorage graph) {
+		System.out.println(graph.toDetailsString()+"\n");
 
-		System.out.println(hopper.getGraph().getAllEdges());
-
-		AllEdgesIterator edges = hopper.getGraph().getAllEdges();
-
+		AllEdgesIterator edges = graph.getAllEdges();
+		
+		NodeAccess na = graph.getNodeAccess();
+		
 		while (edges.next()) {
-			System.out.println(edges);
-			System.out.println(edges.getWalkability());
+			int basenode = edges.getBaseNode();
+			int adjnode = edges.getAdjNode();
+			
+			System.out.println(basenode +" " +adjnode + " walk "+ edges.getWalkability() + " distance " + edges.getDistance());
+			System.out.print("From node: "+ basenode+ " Geo "+na.getLat(basenode) +", " + na.getLon(basenode) );
+			System.out.print(" To node " +adjnode + " Geo " + +na.getLat(adjnode) +", " + na.getLon(adjnode) );
+
+			System.out.println("\n"+edges.getWalkability());
 		}
-
-        GHResponse response = hopper.route(new GHRequest(52.0, 9.0, 41.2, 10.431));
-        
-        System.out.println(response.getPoints());
-        
-		// System.out.println(path.getJsonObject());
-
-		// server.setHandler(root);
-
-		// server.start();
-		// server.join();
 	}
 }

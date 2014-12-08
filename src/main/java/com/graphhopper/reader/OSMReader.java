@@ -749,8 +749,13 @@ public class OSMReader implements DataReader
             zeroCounter++;
             towerNodeDistance = 0.0001;
         }
-                
+        //System.out.println(fromIndex + " " + toIndex);
+        //System.out.println("Walkability " + walkability);
         EdgeIteratorState iter = graphStorage.edge(fromIndex, toIndex).setDistance(towerNodeDistance).setFlags(flags).setWalkability(walkability);
+        
+        //System.out.println(iter.getBaseNode() + " " + iter.getAdjNode());
+        //System.out.println("Got walkability " + iter.getWalkability());
+
         
         if (nodes > 2)
         {

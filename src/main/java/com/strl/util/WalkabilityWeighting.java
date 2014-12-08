@@ -14,11 +14,10 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *
+ */
 package com.strl.util;
 
-import java.util.Random;
-
+import com.graphhopper.GHRequest;
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.Weighting;
 import com.graphhopper.util.EdgeIteratorState;
@@ -28,33 +27,54 @@ import com.graphhopper.util.EdgeIteratorState;
  * in seconds.
  * <p/>
  * @author Rasheed Wihaib
- *
+ */
 public class WalkabilityWeighting implements Weighting
 {
-    /**
+    /*
      * Converting to seconds is not necessary but makes adding other penalities easier (e.g. turn
      * costs or traffic light costs etc)
-     *
+     */
     protected final static double SPEED_CONV = 3.6;
+    protected double distanceAlpha = 1;
+    protected double walkabilityAlpha = 1;
     protected final FlagEncoder encoder;
     private final double maxSpeed;
 
-    public WalkabilityWeighting( FlagEncoder encoder )
+    public WalkabilityWeighting( FlagEncoder encoder, double distanceAlpha, double walkabilityAlpha )
     {
         this.encoder = encoder;
         maxSpeed = encoder.getMaxSpeed() * SPEED_CONV;
+        this.distanceAlpha = distanceAlpha;
+        this.walkabilityAlpha = walkabilityAlpha;
+    }
+    
+    public WalkabilityWeighting( FlagEncoder encoder, GHRequest request)
+    {
+    	this(encoder, request.getDistanceCoefficient(), request.getWalkabilityCoefficient());
     }
 
     @Override
     public double getMinWeight( double distance )
     {
+    	System.out.println(distance);
         return distance / maxSpeed;
     }
 
     @Override
     public double calcWeight( EdgeIteratorState edge, boolean reverse, int prevOrNextEdgeId )
     {        
-        return edge.getAdditionalField();
+    	double speed = reverse ? encoder.getReverseSpeed(edge.getFlags()) : encoder.getSpeed(edge.getFlags());
+        if (speed == 0)
+            return Double.POSITIVE_INFINITY;
+
+        int walk = edge.getWalkability();
+        if(walk == 0) {
+        	walk = 1;
+        }
+        
+        double weight = distanceAlpha * edge.getDistance() + walkabilityAlpha *walk;
+        return weight;
+        
     }
 
     @Override
@@ -62,4 +82,4 @@ public class WalkabilityWeighting implements Weighting
     {
         return "WALKABLE|" + encoder;
     }
-}*/
+}

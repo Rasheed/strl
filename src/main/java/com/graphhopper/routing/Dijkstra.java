@@ -20,6 +20,8 @@ package com.graphhopper.routing;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 import com.graphhopper.routing.util.FlagEncoder;
@@ -40,6 +42,7 @@ public class Dijkstra extends AbstractRoutingAlgorithm
 {
     private TIntObjectMap<EdgeEntry> fromMap;
     private PriorityQueue<EdgeEntry> fromHeap;
+    private Map<Integer, Integer> walkabilities = new HashMap<Integer, Integer>();
     private int visitedNodes;
     private int to = -1;
     private EdgeEntry currEdge;
@@ -66,7 +69,10 @@ public class Dijkstra extends AbstractRoutingAlgorithm
         {
             fromMap.put(from, currEdge);
         }
-        return runAlgo();
+        Path path = runAlgo();
+        System.out.println(path.getWalkability(walkabilities));
+        System.out.println(path.toDetailsString());
+        return path;
     }
 
     private Path runAlgo()
@@ -82,11 +88,12 @@ public class Dijkstra extends AbstractRoutingAlgorithm
             EdgeIterator iter = explorer.setBaseNode(startNode);
             while (iter.next())
             {
+                walkabilities.put(iter.getEdge(), iter.getWalkability());
                 if (!accept(iter, currEdge.edge))
                     continue;
-
+                
                 int traversalId = traversalMode.createTraversalId(iter, false);
-                double tmpWeight = weighting.calcWeight(iter, false, currEdge.edge) + currEdge.weight;
+                double tmpWeight = iter.getWalkability();//weighting.calcWeight(iter, false, currEdge.edge) + currEdge.weight;
                 if (Double.isInfinite(tmpWeight))
                     continue;
 
@@ -97,7 +104,7 @@ public class Dijkstra extends AbstractRoutingAlgorithm
                     nEdge.parent = currEdge;
                     fromMap.put(traversalId, nEdge);
                     fromHeap.add(nEdge);
-                } else if (nEdge.weight > tmpWeight)
+                } else if (nEdge.weight < tmpWeight)
                 {
                     fromHeap.remove(nEdge);
                     nEdge.edge = iter.getEdge();

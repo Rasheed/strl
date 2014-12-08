@@ -22,10 +22,13 @@ import com.graphhopper.storage.EdgeEntry;
 import com.graphhopper.storage.Graph;
 import com.graphhopper.storage.NodeAccess;
 import com.graphhopper.util.*;
+
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Stores the nodes for the found path of an algorithm. It additionally needs the edgeIds to make
@@ -523,4 +526,15 @@ public class Path
         }
         return toString() + ", found:" + isFound() + ", " + str;
     }
+
+	public int getWalkability(Map<Integer, Integer> walkabilities) {
+		int walkability = 0;
+		System.out.println(walkabilities);
+        for (int i = 0; i < edgeIds.size(); i++)
+        {
+            walkability += walkabilities.get(edgeIds.get(i));
+           
+        }
+        return walkability;
+	}
 }

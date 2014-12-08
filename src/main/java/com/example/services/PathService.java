@@ -14,23 +14,24 @@ import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.CmdArgs;
+import com.strl.hopper.StrlHopper;
 
 @Path("/path")
 @Produces(MediaType.APPLICATION_JSON)
 public class PathService {
-	/*
+	
 	@GET
 	@Path("walkable/{fromLat}/{fromLon}/{toLat}/{toLon}")
-	public JSONObject getWalkableRoute(
+	public List<Double[]> getWalkableRoute(
 			@PathParam("fromLat") Double fromLat,
 			@PathParam("fromLon") Double fromLon, 
 			@PathParam("toLat") Double toLat,
-			@PathParam("toLon") Double toLon) {
+			@PathParam("toLon") Double toLon){
 		StrlHopper hopper = new StrlHopper();
     	
         GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
-        return new StrlPath(response).computeStandardRoute(fromLat, fromLon, toLat, toLon).getJsonObject();
-    }*/
+        return response.getPoints().toGeoJson();
+    }
 	
 	@GET
 	@Path("{fromLat}/{fromLon}/{toLat}/{toLon}")

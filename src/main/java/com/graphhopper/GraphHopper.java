@@ -49,8 +49,8 @@ public class GraphHopper implements GraphHopperAPI
 {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     // for graph:
-    private GraphStorage graph;
-    private EncodingManager encodingManager;
+    protected GraphStorage graph;
+    protected EncodingManager encodingManager;
     private int defaultSegmentSize = -1;
     private String ghLocation = "";
     private DAType dataAccessType = DAType.RAM_STORE;
@@ -64,10 +64,10 @@ public class GraphHopper implements GraphHopperAPI
     private boolean fullyLoaded = false;
     // for routing
     private boolean simplifyResponse = true;
-    private TraversalMode traversalMode = TraversalMode.NODE_BASED;
+    protected TraversalMode traversalMode = TraversalMode.NODE_BASED;
     private RoutingAlgorithmFactory algoFactory;
     // for index
-    private LocationIndex locationIndex;
+    protected LocationIndex locationIndex;
     private int preciseIndexResolution = 300;
     private int maxRegionSearch = 4;
     // for prepare
@@ -89,7 +89,7 @@ public class GraphHopper implements GraphHopperAPI
     // utils    
     private final TranslationMap trMap = new TranslationMap().doImport();
     private ElevationProvider eleProvider = ElevationProvider.NOOP;
-    private final AtomicLong visitedSum = new AtomicLong(0);
+    protected final AtomicLong visitedSum = new AtomicLong(0);
 
     public GraphHopper()
     {
@@ -532,7 +532,7 @@ public class GraphHopper implements GraphHopperAPI
 
         // osm import
         osmReaderWayPointMaxDistance = args.getDouble("osmreader.wayPointMaxDistance", osmReaderWayPointMaxDistance);
-        String flagEncoders = args.get("graph.flagEncoders", "CAR");
+        String flagEncoders = args.get("graph.flagEncoders", "FOOT");
         if (flagEncoders.toLowerCase().contains("turncosts=true"))
             traversalMode = TraversalMode.EDGE_BASED_2DIR;
         encodingManager = new EncodingManager(flagEncoders, bytesForFlags);

@@ -10,6 +10,9 @@
 
     <link href="//netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.css" rel="stylesheet">
+        
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 
     <!--
     IMPORTANT:
@@ -54,56 +57,13 @@
             -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
         }
+    
+        #map {
+            width: 100%;
+            height: 300px;
+        }
     </style>
-    <!-- /// -->
-    <script type="text/javascript">
-        <!--
-        function appname() {
-            return location.hostname.substring(0, location.hostname.indexOf("."));
-        }
-
-        function openRestClient(startUrl) {
-            $('#rest-url').val(startUrl);
-            $('#rest-result-container').hide();
-            $('#rest-client-tab').click();
-        }
-
-        function sendGetRequest() {
-            $.ajax({
-                url:$('#rest-url').val(),
-                dataType:'json',
-                context:document.body,
-                success:function (data, textStatus, jqXHR) {
-                    showRestResults('Success', 'alert-success', JSON.stringify(data, undefined, 2));
-                },
-                error:function (qXHR, textStatus, errorThrown) {
-                    if (errorThrown instanceof SyntaxError) {
-                        errorThrown = errorThrown.message;
-                    }
-
-                    showRestResults(textStatus, 'alert-error', errorThrown);
-                }
-            });
-        }
-
-        function showRestResults(headerText, headerClass, bodyText) {
-            $('#rest-result-header-text').text(headerText);
-            $('#rest-result-header').removeClass('alert-error').removeClass('alert-success');
-            $('#rest-result-header').addClass(headerClass);
-
-            $('#rest-result-body').text(bodyText);
-            prettyPrint();
-
-            $('#rest-result-container').show();
-        }
-
-        function prettyPrintOnce() {
-            prettyPrint();
-            $('.prettyprint.once').removeClass('prettyprint');
-        }
-        // -->
-    </script>
-</head>
+    </head>
 
 <body onload="prettyPrintOnce();">
 
@@ -130,12 +90,10 @@
 </div>
 
 <div style="margin-bottom: 20px">
-    Example: Get the geo points of a route.
+    Example: Get the path between two geo points
     <code>/services/path/51.524559/-0.13404/51.500729/-0.124625</code></br>
-    Example: Get the instructions of a route.
-    <code>/services/path/instructions/51.524559/-0.13404/51.500729/-0.124625</code></br>
-    Example: Get the instructions of a route.
-    <code>/services/path/walkable/51.524559/-0.13404/51.500729/-0.124625</code></br>
+    GET will retrieve the most walkable path according to a weighting of 1:4 distance:walkability
+    </br>GET GH PATH will retrive the shortest path according to graphhopper
 </div>
 
 <div class="tab-content">
@@ -145,6 +103,7 @@
 
 <div id="rest-client" class="tab-pane">
     <h1>REST Client</h1>
+    <div id="map"></div>
 
     <div id="rest-client-widget" style="margin: 10px">
         <form class="form-horizontal" class="row-fluid">
@@ -152,6 +111,7 @@
                 <label class="control-label search-query" for="rest-url"><strong>URL</strong></label>
                 <input id="rest-url" type="text" value="/services/path">
                 <button type="submit" class="btn btn-primary" onclick="sendGetRequest(); return false;">GET</button>
+                <button type="submit" class="btn btn-primary" onclick="sendGraphhopperRequest(); return false;">GET GH Path</button>
             </fieldset>
         </form>
 
@@ -174,8 +134,6 @@
 </div>
 <!-- end tab content -->
 </div>
-
-
 </div>
 
 
@@ -186,6 +144,92 @@
 </div>
 
 <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+<!-- /// -->
+<script type="text/javascript">
+    var map = L.map('map').setView([51.505, -0.09], 13);
+    L.tileLayer('http://{s}.tiles.mapbox.com/v3/rwihaib.j48kk279/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                maxZoom: 18
+                }).addTo(map);
+function appname() {
+    return location.hostname.substring(0, location.hostname.indexOf("."));
+}
+
+function openRestClient(startUrl) {
+    $('#rest-url').val(startUrl);
+    $('#rest-result-container').hide();
+    $('#rest-client-tab').click();
+}
+
+function sendGetRequest() {
+    $.ajax({
+           url:$('#rest-url').val(),
+           dataType:'json',
+           context:document.body,
+           success:function (data, textStatus, jqXHR) {
+           showRestResults('Success', 'alert-success', JSON.stringify(data, undefined, 2));
+           var latlngs = [];
+            for (var i = 0; i < data.length; i++) {
+            latlngs.push(new L.LatLng(data[i][1], data[i][0]));
+            }
+            var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map);
+            map.fitBounds(polyline.getBounds());
+           },
+           error:function (qXHR, textStatus, errorThrown) {
+           if (errorThrown instanceof SyntaxError) {
+            errorThrown = errorThrown.message;
+           }
+           
+           showRestResults(textStatus, 'alert-error', errorThrown);
+           }
+        });
+}
+
+function sendGraphhopperRequest() {
+    $.ajax({
+           url:'https://strlapp.herokuapp.com'+$('#rest-url').val(),
+           dataType:'json',
+           context:document.body,
+           success:function (data, textStatus, jqXHR) {
+           showRestResults('Success', 'alert-success', JSON.stringify(data, undefined, 2));
+           var latlngs = [];
+           for (var i = 0; i < data.length; i++) {
+           
+           latlngs.push(new L.LatLng(data[i][1], data[i][0]));
+           }
+           var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+           map.fitBounds(polyline.getBounds());
+           },
+           error:function (qXHR, textStatus, errorThrown) {
+           if (errorThrown instanceof SyntaxError) {
+           errorThrown = errorThrown.message;
+           }
+           
+           showRestResults(textStatus, 'alert-error', errorThrown);
+           }
+        });
+}
+
+function showRestResults(headerText, headerClass, bodyText) {
+    $('#rest-result-header-text').text(headerText);
+    $('#rest-result-header').removeClass('alert-error').removeClass('alert-success');
+    $('#rest-result-header').addClass(headerClass);
+    
+    $('#rest-result-body').text(bodyText);
+    prettyPrint();
+    
+    $('#rest-result-container').show();
+}
+
+function prettyPrintOnce() {
+    prettyPrint();
+    $('.prettyprint.once').removeClass('prettyprint');
+}
+// -->
+</script>
+
+<script src="es5-shim.min.js"></script>
+<script src="lib/leaflet/0.4/dist/leaflet.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.min.js"></script>
 </body>

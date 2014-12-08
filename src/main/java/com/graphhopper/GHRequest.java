@@ -38,6 +38,8 @@ public class GHRequest
     private String vehicle = "";
     private boolean possibleToAdd = false;
     private Locale locale = Locale.US;
+	private double distanceCof = 1;
+	private double walkabilityCof;
 
     public GHRequest()
     {
@@ -174,4 +176,22 @@ public class GHRequest
     {
         return hints;
     }
+
+    public GHRequest setDistanceCof(double distanceCof) {
+		this.distanceCof = distanceCof;
+		return this;
+	}
+    
+	public double getDistanceCoefficient() {
+		return distanceCof;
+	}
+	
+	public GHRequest setWalkabilityCof(double walkabilityCof) {
+		this.walkabilityCof = walkabilityCof;
+		return this;
+	}
+
+	public double getWalkabilityCoefficient() {
+		return walkabilityCof;
+	}
 }

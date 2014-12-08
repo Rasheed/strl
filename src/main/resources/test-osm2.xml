@@ -27,6 +27,15 @@
 		<tag k="name" v="Tester" />
 	</node>
 
+	<way id="13" uid="85763">
+		<nd ref="10" />
+		<nd ref="40" />
+		<tag k="name" v="street 123;B 122" />
+		<tag k="highway" v="service" />
+		<tag k="foot" v="yes" />
+		<tag k="walkability" v="40" />
+	</way>
+
 	<way id="10" uid="85761">
 		<nd ref="10" />
 		<nd ref="20" />

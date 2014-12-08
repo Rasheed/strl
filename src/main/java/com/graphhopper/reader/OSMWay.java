@@ -25,6 +25,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Represents an OSM Way
@@ -35,6 +36,7 @@ public class OSMWay extends OSMElement
 {
     protected final TLongList nodes = new TLongArrayList(5);
     protected int walkability = 0;
+    Random random = new Random();
 
     /**
      * Constructor for XML Parser
@@ -59,11 +61,16 @@ public class OSMWay extends OSMElement
                 String key = parser.getAttributeValue(null, "k");
                 String value = parser.getAttributeValue(null, "v");
                 // ignore tags with empty values
-                
-                if(key.equals("walkability")) {
-                	walkability = Integer.parseInt(value);
-                	System.out.println(walkability);
-                }                
+                int walk = random.nextInt(100);
+                while(walk == 0) {
+                	walk = random.nextInt(100);
+                }
+                this.walkability = walk;
+				if (key.equals("walkability")) {
+					if (value != null && value.length() > 0) {
+						walkability = Integer.parseInt(value);
+					}
+				}          
                 if (value != null && value.length() > 0)
                     setTag(key, value);
             }
