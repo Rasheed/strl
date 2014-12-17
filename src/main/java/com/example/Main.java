@@ -1,17 +1,15 @@
 package com.example;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.apache.commons.logging.Log;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
-import com.graphhopper.GHRequest;
-import com.graphhopper.GHResponse;
-import com.graphhopper.GraphHopper;
 import com.graphhopper.routing.util.AllEdgesIterator;
-import com.graphhopper.routing.util.EncodingManager;
-import com.graphhopper.storage.GraphBuilder;
 import com.graphhopper.storage.GraphStorage;
 import com.graphhopper.storage.NodeAccess;
-import com.graphhopper.util.CmdArgs;
 import com.strl.hopper.StrlHopper;
 
 /**
@@ -36,7 +34,7 @@ public class Main {
 		if (webPort == null || webPort.isEmpty()) {
 			webPort = "8080";
 		}
-
+		
 		Server server = new Server(Integer.valueOf(webPort));
 		WebAppContext root = new WebAppContext();
 
@@ -56,27 +54,61 @@ public class Main {
 
     	StrlHopper hopper = new StrlHopper();
 		
-		GHResponse response = hopper.route(new GHRequest(51.524559, -0.13404, 51.500729, -0.124625)
+		/*GHResponse response = hopper.route(new GHRequest(51.524559, -0.13404, 51.500729, -0.124625)
 				.setVehicle("foot"));
         		
 		System.out.println(response.getPoints());
         
-		//System.out.println(path.getJsonObject());
+		System.out.println(path.getJsonObject());
 
 		server.setHandler(root);
 
 		server.start();
-		server.join();
+		server.join();*/
+    	printGraph(hopper.getGraph());
 	}
 	
 	public static void printGraph(GraphStorage graph) {
 		System.out.println(graph.toDetailsString()+"\n");
 
 		AllEdgesIterator edges = graph.getAllEdges();
-		
-		NodeAccess na = graph.getNodeAccess();
-		
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter("normaliseddistanceslog.csv");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		int i = 0;
+		double min = 0.000161410286871274;
+		double max = 1.003009027;
 		while (edges.next()) {
+			try
+			{
+		 
+				double oneoverd = 1/edges.getDistance();
+				
+				double normalised = Math.log(oneoverd) - Math.log(max) / Math.log(max - min);
+				
+			    writer.append(String.valueOf(normalised));
+			    writer.append('\n');
+			    
+			}
+			catch(IOException e)
+			{
+			     e.printStackTrace();
+			} 
+		}
+		
+	    try {
+			writer.flush();
+		    writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			System.out.println("finished to file");		
+			/*while (edges.next()) {
 			int basenode = edges.getBaseNode();
 			int adjnode = edges.getAdjNode();
 			
@@ -85,6 +117,6 @@ public class Main {
 			System.out.print(" To node " +adjnode + " Geo " + +na.getLat(adjnode) +", " + na.getLon(adjnode) );
 
 			System.out.println("\n"+edges.getWalkability());
-		}
+		}*/
 	}
 }
