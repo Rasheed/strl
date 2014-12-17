@@ -60,7 +60,7 @@
     
         #map {
             width: 100%;
-            height: 300px;
+            height: 400px;
         }
     </style>
     </head>
@@ -90,10 +90,12 @@
 </div>
 
 <div style="margin-bottom: 20px">
-    Example: Get the path between two geo points
+    Example: Get the shortest path between two geo points UCL - Tate
     <code>/services/path/51.524559/-0.13404/51.500729/-0.124625</code></br>
-    GET will retrieve the most walkable path according to a weighting of 1:4 distance:walkability
-    </br>GET GH PATH will retrive the shortest path according to graphhopper
+    Example: Get the most walkable path between two geo points UCL - Tate
+    <code>/services/path/walkable/51.524559/-0.13404/51.500729/-0.124625</code></br>
+    Example: Get the path with the 50/50 split between walkability and distance between two geo points UCL - Tate
+    <code>/services/path/strl/51.524559/-0.13404/51.500729/-0.124625</code></br>
 </div>
 
 <div class="tab-content">
@@ -102,7 +104,6 @@
 <!-- End CLI tab -->
 
 <div id="rest-client" class="tab-pane">
-    <h1>REST Client</h1>
     <div id="map"></div>
 
     <div id="rest-client-widget" style="margin: 10px">
@@ -111,7 +112,6 @@
                 <label class="control-label search-query" for="rest-url"><strong>URL</strong></label>
                 <input id="rest-url" type="text" value="/services/path">
                 <button type="submit" class="btn btn-primary" onclick="sendGetRequest(); return false;">GET</button>
-                <button type="submit" class="btn btn-primary" onclick="sendGraphhopperRequest(); return false;">GET GH Path</button>
             </fieldset>
         </form>
 
@@ -162,6 +162,9 @@ function openRestClient(startUrl) {
 }
 
 function sendGetRequest() {
+    
+    var randcolor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);;
+    
     $.ajax({
            url:$('#rest-url').val(),
            dataType:'json',
@@ -172,37 +175,12 @@ function sendGetRequest() {
             for (var i = 0; i < data.length; i++) {
             latlngs.push(new L.LatLng(data[i][1], data[i][0]));
             }
-            var polyline = L.polyline(latlngs, {color: 'blue'}).addTo(map);
+            var polyline = L.polyline(latlngs, {color: randcolor}).addTo(map);
             map.fitBounds(polyline.getBounds());
            },
            error:function (qXHR, textStatus, errorThrown) {
            if (errorThrown instanceof SyntaxError) {
             errorThrown = errorThrown.message;
-           }
-           
-           showRestResults(textStatus, 'alert-error', errorThrown);
-           }
-        });
-}
-
-function sendGraphhopperRequest() {
-    $.ajax({
-           url:'https://strlapp.herokuapp.com'+$('#rest-url').val(),
-           dataType:'json',
-           context:document.body,
-           success:function (data, textStatus, jqXHR) {
-           showRestResults('Success', 'alert-success', JSON.stringify(data, undefined, 2));
-           var latlngs = [];
-           for (var i = 0; i < data.length; i++) {
-           
-           latlngs.push(new L.LatLng(data[i][1], data[i][0]));
-           }
-           var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
-           map.fitBounds(polyline.getBounds());
-           },
-           error:function (qXHR, textStatus, errorThrown) {
-           if (errorThrown instanceof SyntaxError) {
-           errorThrown = errorThrown.message;
            }
            
            showRestResults(textStatus, 'alert-error', errorThrown);
