@@ -3,13 +3,13 @@ package com.example;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import com.graphhopper.GHRequest;
+import com.graphhopper.GHResponse;
 import com.graphhopper.routing.util.AllEdgesIterator;
 import com.graphhopper.storage.GraphStorage;
-import com.graphhopper.storage.NodeAccess;
 import com.strl.hopper.StrlHopper;
 
 /**
@@ -54,18 +54,18 @@ public class Main {
 
     	StrlHopper hopper = new StrlHopper();
 		
-		/*GHResponse response = hopper.route(new GHRequest(51.524559, -0.13404, 51.500729, -0.124625)
+		GHResponse response = hopper.route(new GHRequest(51.524559, -0.13404, 51.500729, -0.124625)
 				.setVehicle("foot"));
         		
-		System.out.println(response.getPoints());
+		/*System.out.println(response.getPoints());
         
-		System.out.println(path.getJsonObject());
+		System.out.println(path.getJsonObject());*/
 
 		server.setHandler(root);
 
 		server.start();
-		server.join();*/
-    	printGraph(hopper.getGraph());
+		server.join();
+    	//printGraph(hopper.getGraph());
 	}
 	
 	public static void printGraph(GraphStorage graph) {
