@@ -28,7 +28,7 @@ import com.strl.util.WalkabilityWeighting;
 public class StrlHopper extends GraphHopper{
 	public StrlHopper() {
     	this.forServer().
-        		setOSMFile("src/main/resources/central.xml")
+        		setOSMFile("src/main/resources/central-strl.xml")
         		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
         		.setInMemory()
         		.init(new CmdArgs());
@@ -37,7 +37,7 @@ public class StrlHopper extends GraphHopper{
 	
 	@Override
 	public Weighting createWeighting(WeightingMap wMap, FlagEncoder encoder) {
-		return new WalkabilityWeighting(encoder, 0.5, 2);
+		return new WalkabilityWeighting(encoder, 0.5, 0.5);
 	}
 	
 	 protected List<Path> getPaths( GHRequest request, GHResponse rsp )

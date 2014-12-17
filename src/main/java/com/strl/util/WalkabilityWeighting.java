@@ -71,8 +71,16 @@ public class WalkabilityWeighting implements Weighting
         if(walk == 0) {
         	walk = 1;
         }
-        
-        double weight = distanceAlpha * edge.getDistance() + walkabilityAlpha *walk;
+		double min = 0.000161410286871274;
+		double max = 1.003009027;
+		 
+		double oneoverd = 1/edge.getDistance();
+				
+		double normalised = Math.log(oneoverd) - Math.log(max) / Math.log(max - min);
+        double weight = distanceAlpha * normalised + walkabilityAlpha *walk;
+        if(weight < 0) {
+        	weight = 0;
+        }
         return weight;
         
     }

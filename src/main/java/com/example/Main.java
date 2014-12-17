@@ -8,8 +8,11 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
+import com.graphhopper.GraphHopper;
 import com.graphhopper.routing.util.AllEdgesIterator;
+import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.storage.GraphStorage;
+import com.graphhopper.util.CmdArgs;
 import com.strl.hopper.StrlHopper;
 
 /**
@@ -53,6 +56,7 @@ public class Main {
 		root.setParentLoaderPriority(true);
 
     	StrlHopper hopper = new StrlHopper();
+        //hopper.importOrLoad();
 		
 		GHResponse response = hopper.route(new GHRequest(51.524559, -0.13404, 51.500729, -0.124625)
 				.setVehicle("foot"));

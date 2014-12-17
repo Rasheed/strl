@@ -21,13 +21,34 @@ import com.strl.hopper.StrlHopper;
 public class PathService {
 	
 	@GET
+	@Path("strl/{fromLat}/{fromLon}/{toLat}/{toLon}")
+	public List<Double[]> getStrlPath(
+			@PathParam("fromLat") Double fromLat,
+			@PathParam("fromLon") Double fromLon, 
+			@PathParam("toLat") Double toLat,
+			@PathParam("toLon") Double toLon) {
+    	GraphHopper hopper = new GraphHopper().forServer().
+        		setOSMFile("src/main/resources/central-strl.xml")
+        		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
+        		.init(new CmdArgs());
+        hopper.importOrLoad();
+
+        GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
+        return response.getPoints().toGeoJson();
+    }
+	
+	@GET
 	@Path("walkable/{fromLat}/{fromLon}/{toLat}/{toLon}")
 	public List<Double[]> getWalkableRoute(
 			@PathParam("fromLat") Double fromLat,
 			@PathParam("fromLon") Double fromLon, 
 			@PathParam("toLat") Double toLat,
 			@PathParam("toLon") Double toLon){
-		StrlHopper hopper = new StrlHopper();
+		GraphHopper hopper = new GraphHopper().forServer().
+        		setOSMFile("src/main/resources/central-walkable.xml")
+        		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
+        		.init(new CmdArgs());
+		hopper.importOrLoad();
     	
         GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
         return response.getPoints().toGeoJson();
