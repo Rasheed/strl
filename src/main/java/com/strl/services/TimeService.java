@@ -1,6 +1,6 @@
-package com.example.services;
+package com.strl.services;
 
-import com.example.models.Time;
+import com.strl.models.Time;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

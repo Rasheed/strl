@@ -1,4 +1,4 @@
-package com.example;
+package com.strl;
 
 import java.io.FileWriter;
 import java.io.IOException;

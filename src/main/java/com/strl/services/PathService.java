@@ -1,4 +1,4 @@
-package com.example.services;
+package com.strl.services;
 
 import java.util.List;
 import java.util.Map;

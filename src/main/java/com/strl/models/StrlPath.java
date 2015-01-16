@@ -1,4 +1,4 @@
-package com.example.models;
+package com.strl.models;
 
 import java.io.IOException;
 
