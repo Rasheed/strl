@@ -101,7 +101,6 @@
                     for (var i = 0; i < data.length; i++) {
                         latlngs.push(new L.LatLng(data[i][1], data[i][0]));
                     }
-                    if
                     var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
                     map.fitBounds(polyline.getBounds());
                 },
