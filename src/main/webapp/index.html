@@ -11,8 +11,9 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.css" rel="stylesheet">
         
-    <link rel="stylesheet" href="leaflet.css" />
-    <script src="leaflet.js"></script>
+        <script src="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js"></script>
+            <link href="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css" rel="stylesheet" />
+
 
     <!--
     IMPORTANT:
@@ -20,48 +21,9 @@
     -->
     <link href="https://heroku.github.com/template-app-bootstrap/heroku.css" rel="stylesheet">
     <style type="text/css">
-        .instructions {
-            display: none;
-        }
-
-        .instructions li {
-            margin-bottom: 10px;
-        }
-
-        .instructions h2 {
-            margin: 18px 0;
-        }
-
-        .instructions blockquote {
-            margin-top: 10px;
-        }
-
-        .screenshot {
-            margin-top: 10px;
-            display: block;
-        }
-
-        .screenshot a {
-            padding: 0;
-            line-height: 1;
-            display: inline-block;
-            text-decoration: none;
-        }
-
-        .screenshot img, .tool-choice img {
-            border: 1px solid #ddd;
-            -webkit-border-radius: 4px;
-            -moz-border-radius: 4px;
-            border-radius: 4px;
-            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
-            -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
-        }
     
-        #map {
-            width: 100%;
-            height: 400px;
-        }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+
     </style>
     </head>
 
@@ -71,139 +33,101 @@
     <div class="navbar-inner">
         <div class="container">
             <a href="/" class="brand">Strl App</a>
-            <!--
-            IMPORTANT:
-            This is Heroku specific markup. Remove to customize.
-            -->
-            <a href="/" class="brand" id="heroku">by <strong>Rasheed Wihaib</strong></a>
-            <!-- /// -->
         </div>
     </div>
 </div>
 
-<div class="container" id="getting-started">
-<div class="row">
-<div class="span8 offset2">
-
-<div class="page-header">
-    <h1>Rest Client for Strl App</h1>
-</div>
-
-<div style="margin-bottom: 20px">
-    Example: Get the shortest path between two geo points UCL - Tate
-    <code>/services/path/51.524559/-0.13404/51.500729/-0.124625</code></br>
-    Example: Get the most walkable path between two geo points UCL - Tate
-    <code>/services/path/walkable/51.524559/-0.13404/51.500729/-0.124625</code></br>
-    Example: Get the path with the 50/50 split between walkability and distance between two geo points UCL - Tate
-    <code>/services/path/strl/51.524559/-0.13404/51.500729/-0.124625</code></br>
-</div>
-
-<div class="tab-content">
-
-</div>
 <!-- End CLI tab -->
-
-<div id="rest-client" class="tab-pane">
-    <div id="map"></div>
-
-    <div id="rest-client-widget" style="margin: 10px">
-        <form class="form-horizontal" class="row-fluid">
-            <fieldset>
-                <label class="control-label search-query" for="rest-url"><strong>URL</strong></label>
-                <input id="rest-url" type="text" value="/services/path">
-                <button type="submit" class="btn btn-primary" onclick="sendGetRequest(); return false;">GET</button>
-            </fieldset>
-        </form>
-
-        <div id="rest-result-container" class="row hide">
-            <div class="row">
-                <div id="rest-result-header" class="offset2 span1 alert">
-                    <a id="rest-result-close-btn" class="close" data-dismiss="alert"
-                       onclick="$('#rest-result-container').hide();">×</a>
-                    <span id="rest-result-header-text"></span>
-                </div>
-            </div>
-            <div class="row">
-                <pre id="rest-result-body" class="offset2 span4 prettyprint language-json"></pre>
-            </div>
-        </div>
-    </div>
-</div>
+<div id="map"></div>
 <!-- end Rest Client tab -->
-
-</div>
-<!-- end tab content -->
-</div>
-</div>
-
-
-</div>
-
-</div>
-</div>
 </div>
 
 <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
 <!-- /// -->
 <script type="text/javascript">
-    var map = L.map('map').setView([51.505, -0.09], 13);
-    L.tileLayer('http://{s}.tiles.mapbox.com/v3/rwihaib.j48kk279/{z}/{x}/{y}.png', {
+    var markers = new L.FeatureGroup();
+    L.mapbox.accessToken = "pk.eyJ1IjoicmFzaGVlZHdpaGFpYiIsImEiOiJaOTBoMFI4In0.5rmY9BbciXR2L_8JC_CaVA";
+    var map = L.mapbox.map('map', 'rasheedwihaib.kp0em92o').setView([51.505, -0.09], 13);
+    L.tileLayer('http://{s}.tiles.mapbox.com/v3/rasheedwihaib.kp0em92o/{z}/{x}/{y}.png', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 maxZoom: 18
                 }).addTo(map);
-function appname() {
-    return location.hostname.substring(0, location.hostname.indexOf("."));
-}
+    var i = 0;
+    function onMapClick(e) {
+        if(i == 2) {
+            markers.clearLayers();
+            i=0;
+        }
+        var marker = L.marker(e.latlng, {riseOnHover: true});
+        markers.addLayer(marker);
+        map.addLayer(markers);
+        if(i==1) {
+            sendGetRequest(markers);
+        }
+        i++;
+    }
 
-function openRestClient(startUrl) {
-    $('#rest-url').val(startUrl);
-    $('#rest-result-container').hide();
-    $('#rest-client-tab').click();
-}
+    map.on('click', onMapClick);
+    function appname() {
+        return location.hostname.substring(0, location.hostname.indexOf("."));
+    }
 
-function sendGetRequest() {
+    function openRestClient(startUrl) {
+        $('#rest-url').val(startUrl);
+        $('#rest-result-container').hide();
+        $('#rest-client-tab').click();
+    }
+
+    function sendGetRequest(markers) {
     
-    var randcolor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);;
-    
-    $.ajax({
-           url:$('#rest-url').val(),
-           dataType:'json',
-           context:document.body,
-           success:function (data, textStatus, jqXHR) {
-           showRestResults('Success', 'alert-success', JSON.stringify(data, undefined, 2));
-           var latlngs = [];
-            for (var i = 0; i < data.length; i++) {
-            latlngs.push(new L.LatLng(data[i][1], data[i][0]));
-            }
-            var polyline = L.polyline(latlngs, {color: randcolor}).addTo(map);
-            map.fitBounds(polyline.getBounds());
-           },
-           error:function (qXHR, textStatus, errorThrown) {
-           if (errorThrown instanceof SyntaxError) {
-            errorThrown = errorThrown.message;
-           }
-           
-           showRestResults(textStatus, 'alert-error', errorThrown);
+        var randcolor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+        var url = "";
+        markers.eachLayer(function (layer) {
+            url = url+"/"+layer.getLatLng().lat+"/"+layer.getLatLng().lng;
+        });
+        
+        var restful = ["","/walkable","/strl"];
+        var arrayLength = restful.length;
+        for (var i = 0; i < arrayLength; i++) {
+            var type = restful[i];
+            $.ajax({
+                   url:"/services/path"+type+url,
+                   dataType:'json',
+                   context:document.body,
+                   success:function (data, textStatus, jqXHR) {
+                    showRestResults('Success', 'alert-success', JSON.stringify(data, undefined, 2));
+                    var latlngs = [];
+                    for (var i = 0; i < data.length; i++) {
+                        latlngs.push(new L.LatLng(data[i][1], data[i][0]));
+                    }
+                    var polyline = L.polyline(latlngs, {color: randcolor}).addTo(map);
+                    map.fitBounds(polyline.getBounds());
+                },
+                error:function (qXHR, textStatus, errorThrown) {
+                   if (errorThrown instanceof SyntaxError) {
+                    errorThrown = errorThrown.message;
+                   }
+                showRestResults(textStatus, 'alert-error', errorThrown);
            }
         });
-}
+        }
+    }
 
-function showRestResults(headerText, headerClass, bodyText) {
-    $('#rest-result-header-text').text(headerText);
-    $('#rest-result-header').removeClass('alert-error').removeClass('alert-success');
-    $('#rest-result-header').addClass(headerClass);
+    function showRestResults(headerText, headerClass, bodyText) {
+        $('#rest-result-header-text').text(headerText);
+        $('#rest-result-header').removeClass('alert-error').removeClass('alert-success');
+        $('#rest-result-header').addClass(headerClass);
     
-    $('#rest-result-body').text(bodyText);
-    prettyPrint();
+        $('#rest-result-body').text(bodyText);
+        prettyPrint();
     
-    $('#rest-result-container').show();
-}
+        $('#rest-result-container').show();
+    }
 
-function prettyPrintOnce() {
-    prettyPrint();
-    $('.prettyprint.once').removeClass('prettyprint');
-}
-// -->
+    function prettyPrintOnce() {
+        prettyPrint();
+        $('.prettyprint.once').removeClass('prettyprint');
+    }
 </script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.min.js"></script>
