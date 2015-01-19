@@ -105,6 +105,10 @@
                    colour = "#00FF00";
                     var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
                     map.fitBounds(polyline.getBounds());
+                   } else{
+                        colour = "#FF0000";
+                        var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
+                        map.fitBounds(polyline.getBounds());
                    }
                 },
                 error:function (qXHR, textStatus, errorThrown) {
