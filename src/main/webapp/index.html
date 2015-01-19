@@ -96,14 +96,14 @@
                    dataType:'json',
                    context:document.body,
                    success:function (data, textStatus, jqXHR) {
+                   while(data == null){
+                   
+                   }
                     showRestResults('Success', 'alert-success', JSON.stringify(data, undefined, 2));
                     var latlngs = [];
                     for (var i = 0; i < data.length; i++) {
                         latlngs.push(new L.LatLng(data[i][1], data[i][0]));
                     }
-                   if(j==0) {
-                    colour = "#FF0000";
-                   }
                     var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
                     map.fitBounds(polyline.getBounds());
                 },
