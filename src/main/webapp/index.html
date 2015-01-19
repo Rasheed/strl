@@ -86,10 +86,11 @@
         });
         
         var restful = ["","/walkable","/strl"];
-        var colours = [,"#00FF00","#0000FF"];
+        var colours = ["#FF0000","#00FF00","#0000FF"];
         var arrayLength = restful.length;
         for (var j = 0; j < arrayLength; j++) {
             var type = restful[j];
+            var colour = colours[j];
             $.ajax({
                    url:"/services/path"+type+url,
                    dataType:'json',
@@ -100,8 +101,8 @@
                     for (var i = 0; i < data.length; i++) {
                         latlngs.push(new L.LatLng(data[i][1], data[i][0]));
                     }
-                   var randcolor = colours[j];
-                    var polyline = L.polyline(latlngs, {color: randcolor}).addTo(map);
+                    if
+                    var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
                     map.fitBounds(polyline.getBounds());
                 },
                 error:function (qXHR, textStatus, errorThrown) {
