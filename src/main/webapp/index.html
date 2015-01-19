@@ -101,12 +101,16 @@
                     for (var i = 0; i < data.length; i++) {
                         latlngs.push(new L.LatLng(data[i][1], data[i][0]));
                     }
-                   if(colour == "#0000FF" && j == 2) {
-                   colour = "#00FF00";
+                   if(j == 0) {
+                   colour = "#FF0000";
                     var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
                     map.fitBounds(polyline.getBounds());
-                   } else{
-                        colour = "#FF0000";
+                   } else if (j == 1){
+                        colour = "#00FF00";
+                        var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
+                        map.fitBounds(polyline.getBounds());
+                   } else {
+                        colour = "#0000FF";
                         var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
                         map.fitBounds(polyline.getBounds());
                    }
