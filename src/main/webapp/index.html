@@ -88,8 +88,9 @@
         var restful = ["","/walkable","/strl"];
         var colours = ["#FF0000","#00FF00","#0000FF"];
         var arrayLength = restful.length;
+        var randcolor;
         for (var i = 0; i < arrayLength; i++) {
-            var randcolor = colours[i];
+            randcolor = colours[i];
             var type = restful[i];
             $.ajax({
                    url:"/services/path"+type+url,
