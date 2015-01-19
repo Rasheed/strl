@@ -95,17 +95,17 @@
                    url:"/services/path"+type+url,
                    dataType:'json',
                    context:document.body,
+                   async:false,
                    success:function (data, textStatus, jqXHR) {
-                   while(data == null){
-                   
-                   }
-                    showRestResults('Success', 'alert-success', JSON.stringify(data, undefined, 2));
                     var latlngs = [];
                     for (var i = 0; i < data.length; i++) {
                         latlngs.push(new L.LatLng(data[i][1], data[i][0]));
                     }
+                   if(colour == "#0000FF" && j == 2) {
+                   colour = "#00FF00";
                     var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
                     map.fitBounds(polyline.getBounds());
+                   }
                 },
                 error:function (qXHR, textStatus, errorThrown) {
                    if (errorThrown instanceof SyntaxError) {
