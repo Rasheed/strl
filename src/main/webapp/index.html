@@ -80,7 +80,6 @@
 
     function sendGetRequest(markers) {
     
-        var randcolor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
         var url = "";
         markers.eachLayer(function (layer) {
             url = url+"/"+layer.getLatLng().lat+"/"+layer.getLatLng().lng;
@@ -89,6 +88,7 @@
         var restful = ["","/walkable","/strl"];
         var arrayLength = restful.length;
         for (var i = 0; i < arrayLength; i++) {
+            var randcolor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
             var type = restful[i];
             $.ajax({
                    url:"/services/path"+type+url,
