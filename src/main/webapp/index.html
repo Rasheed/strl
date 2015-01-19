@@ -86,9 +86,10 @@
         });
         
         var restful = ["","/walkable","/strl"];
+        var colours = ["#FF0000","#00FF00","#0000FF"];
         var arrayLength = restful.length;
         for (var i = 0; i < arrayLength; i++) {
-            var randcolor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+            var randcolor = colours[i];
             var type = restful[i];
             $.ajax({
                    url:"/services/path"+type+url,
