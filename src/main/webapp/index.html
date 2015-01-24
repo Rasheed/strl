@@ -143,14 +143,17 @@ map.fitBounds(feature_group.getBounds());
                    if(j == 0) {
                    colour = "#FF0000";
                     var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
+                    L.control.layers({},{"Fastest": polyline},{collapsed:false}).addTo(map);
                     map.fitBounds(polyline.getBounds());
                    } else if (j == 1){
                         colour = "#00FF00";
                         var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
+                        L.control.layers({},{"Most Walkable": polyline},{collapsed:false}).addTo(map);
                         map.fitBounds(polyline.getBounds());
                    } else {
                         colour = "#0000FF";
                         var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
+                        L.control.layers({},{"Strl Path": polyline},{collapsed:false}).addTo(map);
                         map.fitBounds(polyline.getBounds());
                    }
                 },
