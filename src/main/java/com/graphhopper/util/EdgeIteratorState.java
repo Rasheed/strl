@@ -81,12 +81,12 @@ public interface EdgeIteratorState
     /**
      * @return the additional field value for this edge
      */
-    int getWalkability();
+    double getWalkability();
 
     /**
      * Updates the additional field value for this edge
      */
-    EdgeIteratorState setWalkability( int value );
+    EdgeIteratorState setWalkability( double walkability );
 
     String getName();
 

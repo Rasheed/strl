@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -44,7 +43,10 @@ import com.graphhopper.coll.LongIntMap;
 import com.graphhopper.reader.OSMTurnRelation.TurnCostTableEntry;
 import com.graphhopper.reader.dem.ElevationProvider;
 import com.graphhopper.routing.util.EncodingManager;
-import com.graphhopper.storage.*;
+import com.graphhopper.storage.ExtendedStorage;
+import com.graphhopper.storage.GraphStorage;
+import com.graphhopper.storage.NodeAccess;
+import com.graphhopper.storage.TurnCostStorage;
 import com.graphhopper.util.DistanceCalc;
 import com.graphhopper.util.DistanceCalc3D;
 import com.graphhopper.util.DistanceCalcEarth;
@@ -210,6 +212,10 @@ public class OSMReader implements DataReader
 
                 }
             }
+            /*WalkabilityReader reader = new WalkabilityReader();
+            reader.setMap(in.map);
+            reader.setWalkabilitiesInXML();*/
+            
         } catch (Exception ex)
         {
             throw new RuntimeException("Problem while parsing file", ex);
@@ -350,7 +356,7 @@ public class OSMReader implements DataReader
 
         long relationFlags = getRelFlagsMap().get(way.getId());
 
-        int walkability = way.getWalkability();
+        double walkability = way.getWalkability();
                 
         // TODO move this after we have created the edge and know the coordinates => encodingManager.applyWayTags
         // estimate length of the track e.g. for ferry speed calculation
@@ -621,7 +627,7 @@ public class OSMReader implements DataReader
     /**
      * This method creates from an OSM way (via the osm ids) one or more edges in the graph.
      */
-    Collection<EdgeIteratorState> addOSMWay( TLongList osmNodeIds, long flags, long wayOsmId, int walkability )
+    Collection<EdgeIteratorState> addOSMWay( TLongList osmNodeIds, long flags, long wayOsmId, double walkability )
     {
         PointList pointList = new PointList(osmNodeIds.size(), nodeAccess.is3D());
         List<EdgeIteratorState> newEdges = new ArrayList<EdgeIteratorState>(5);
@@ -705,7 +711,7 @@ public class OSMReader implements DataReader
         return newEdges;
     }
 
-    EdgeIteratorState addEdge( int fromIndex, int toIndex, PointList pointList, long flags, long wayOsmId, int walkability )
+    EdgeIteratorState addEdge( int fromIndex, int toIndex, PointList pointList, long flags, long wayOsmId, double walkability )
     {
         // sanity checks
         if (fromIndex < 0 || toIndex < 0)

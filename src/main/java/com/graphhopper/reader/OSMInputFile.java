@@ -19,13 +19,20 @@ package com.graphhopper.reader;
 
 import com.graphhopper.reader.pbf.Sink;
 import com.graphhopper.reader.pbf.PbfReader;
+import com.strl.reader.WalkabilityReader;
+import com.strl.util.WalkabilityWeighting;
+
+import gnu.trove.list.TLongList;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
 import java.io.*;
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +55,9 @@ public class OSMInputFile implements Sink, Closeable
     private final BlockingQueue<OSMElement> itemQueue;
     private boolean hasIncomingData;
     private int workerThreads = -1;
+    
+    Map<TLongList, Long> map = new HashMap<TLongList, Long>();
+
 
     public OSMInputFile( File file ) throws IOException
     {
@@ -177,7 +187,7 @@ public class OSMInputFile implements Sink, Closeable
 
     private OSMElement getNextXML() throws XMLStreamException
     {
-
+    	
         int event = parser.next();
         while (event != XMLStreamConstants.END_DOCUMENT)
         {
@@ -202,7 +212,9 @@ public class OSMInputFile implements Sink, Closeable
                         case 'w':
                         {
                             id = Long.parseLong(idStr);
-                            return OSMWay.create(id, parser);
+                            OSMWay way = OSMWay.create(id, parser);
+							//map.put(way.nodes, id);
+                            return way;
                         }
                         case 'r':
                             id = Long.parseLong(idStr);

@@ -156,13 +156,13 @@ public class LocationIndexTreeSC extends LocationIndexTree
             }
 
             @Override
-            public int getWalkability()
+            public double getWalkability()
             {
                 return tmpIter.getWalkability();
             }
             
             @Override
-            public EdgeIteratorState setWalkability(int value) {
+            public EdgeIteratorState setWalkability(double value) {
                 return tmpIter.setWalkability(value);
             }
 

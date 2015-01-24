@@ -177,7 +177,7 @@ public class QueryGraph implements Graph {
 				EdgeIteratorState closestEdge = results.get(0).getClosestEdge();
 				final PointList fullPL = closestEdge.fetchWayGeometry(3);
 				int baseNode = closestEdge.getBaseNode();
-				int walkability = closestEdge.getWalkability();
+				double walkability = closestEdge.getWalkability();
 				// sort results on the same edge by the wayIndex and if equal by
 				// distance to pillar node
 				Collections.sort(results, new Comparator<QueryResult>() {
@@ -271,7 +271,7 @@ public class QueryGraph implements Graph {
 	private void createEdges(GHPoint3D prevSnapped, int prevWayIndex,
 			GHPoint3D currSnapped, int wayIndex, PointList fullPL,
 			EdgeIteratorState closestEdge, int prevNodeId, int nodeId,
-			long reverseFlags, int walkability) {
+			long reverseFlags, double walkability) {
 		int max = wayIndex + 1;
 		// basePoints must have at least the size of 2 to make sure
 		// fetchWayGeometry(3) returns at least 2
@@ -664,12 +664,12 @@ public class QueryGraph implements Graph {
 		}
 
 		@Override
-		public int getWalkability() {
+		public double getWalkability() {
 			return edges.get(current).getWalkability();
 		}
 
 		@Override
-		public EdgeIteratorState setWalkability(int value) {
+		public EdgeIteratorState setWalkability(double value) {
 			return edges.get(current).setWalkability(value);
 		}
 
@@ -727,11 +727,11 @@ public class QueryGraph implements Graph {
 		private String name;
 		private final int baseNode;
 		private final int adjNode;
-		private int walkability;
+		private double walkability;
 
 		public VirtualEdgeIState(int edgeId, int baseNode, int adjNode,
 				double distance, long flags, String name, PointList pointList,
-				int walkability) {
+				double walkability2) {
 			this.edgeId = edgeId;
 			this.baseNode = baseNode;
 			this.adjNode = adjNode;
@@ -739,7 +739,7 @@ public class QueryGraph implements Graph {
 			this.flags = flags;
 			this.name = name;
 			this.pointList = pointList;
-			this.walkability = walkability;
+			this.walkability = walkability2;
 		}
 
 		@Override
@@ -796,12 +796,12 @@ public class QueryGraph implements Graph {
 		}
 		
 		@Override
-		public int getWalkability() {
+		public double getWalkability() {
 			return walkability;
 		}
 
 		@Override
-		public EdgeIteratorState setWalkability(int value) {
+		public EdgeIteratorState setWalkability(double value) {
 			this.walkability = value;
 			return this;
 		}

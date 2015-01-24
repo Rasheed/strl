@@ -42,7 +42,7 @@ public class Dijkstra extends AbstractRoutingAlgorithm
 {
     private TIntObjectMap<EdgeEntry> fromMap;
     private PriorityQueue<EdgeEntry> fromHeap;
-    private Map<Integer, Integer> walkabilities = new HashMap<Integer, Integer>();
+    private Map<Integer, Double> walkabilities = new HashMap<Integer, Double>();
     private int visitedNodes;
     private int to = -1;
     private EdgeEntry currEdge;

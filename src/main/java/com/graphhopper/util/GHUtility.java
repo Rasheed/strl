@@ -457,12 +457,12 @@ public class GHUtility
         }
 
         @Override
-        public int getWalkability() {
+        public double getWalkability() {
             throw new UnsupportedOperationException("Not supported. Edge is empty.");
         }
         
         @Override
-        public EdgeIteratorState setWalkability(int value) {
+        public EdgeIteratorState setWalkability(double value) {
             throw new UnsupportedOperationException("Not supported. Edge is empty.");
         }
 

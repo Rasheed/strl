@@ -20,12 +20,11 @@ package com.graphhopper.reader;
 import gnu.trove.list.TLongList;
 import gnu.trove.list.array.TLongArrayList;
 
+import java.util.Random;
+
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import java.util.Map;
-import java.util.Random;
 
 /**
  * Represents an OSM Way
@@ -35,7 +34,7 @@ import java.util.Random;
 public class OSMWay extends OSMElement
 {
     protected final TLongList nodes = new TLongArrayList(5);
-    protected int walkability = 0;
+    protected double walkability = 0;
     Random random = new Random();
 
     /**
@@ -61,18 +60,12 @@ public class OSMWay extends OSMElement
                 String key = parser.getAttributeValue(null, "k");
                 String value = parser.getAttributeValue(null, "v");
                 // ignore tags with empty values
-                int walk = random.nextInt(100);
-                while(walk == 0) {
-                	walk = random.nextInt(100);
-                }
-                this.walkability = walk;
-				if (key.equals("walkability")) {
-					if (value != null && value.length() > 0) {
-						walkability = Integer.parseInt(value);
-					}
-				}          
                 if (value != null && value.length() > 0)
                     setTag(key, value);
+                
+                if(key.equals("walkability")) {
+                	walkability = Double.valueOf(value);
+                }
             }
 
             event = parser.nextTag();
@@ -111,7 +104,11 @@ public class OSMWay extends OSMElement
         return "Way (" + getId() + ", " + nodes.size() + " nodes)";
     }
 
-	public int getWalkability() {
+	public double getWalkability() {
 		return walkability;
+	}
+
+	public void setWalkability(double walkability) {
+		this.walkability = walkability;	
 	}
 }

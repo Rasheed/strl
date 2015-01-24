@@ -17,7 +17,6 @@
  */
 package com.strl.util;
 
-import com.graphhopper.GHRequest;
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.Weighting;
 import com.graphhopper.util.EdgeIteratorState;
@@ -35,22 +34,13 @@ public class WalkabilityWeighting implements Weighting
      * costs or traffic light costs etc)
      */
     protected final static double SPEED_CONV = 3.6;
-    protected double distanceAlpha = 1;
-    protected double walkabilityAlpha = 1;
     protected final FlagEncoder encoder;
     private final double maxSpeed;
 
-    public WalkabilityWeighting( FlagEncoder encoder, double distanceAlpha, double walkabilityAlpha )
+    public WalkabilityWeighting( FlagEncoder encoder )
     {
         this.encoder = encoder;
         maxSpeed = encoder.getMaxSpeed() * SPEED_CONV;
-        this.distanceAlpha = distanceAlpha;
-        this.walkabilityAlpha = walkabilityAlpha;
-    }
-    
-    public WalkabilityWeighting( FlagEncoder encoder, GHRequest request)
-    {
-    	this(encoder, request.getDistanceCoefficient(), request.getWalkabilityCoefficient());
     }
 
     @Override
@@ -64,25 +54,12 @@ public class WalkabilityWeighting implements Weighting
     public double calcWeight( EdgeIteratorState edge, boolean reverse, int prevOrNextEdgeId )
     {        
     	double speed = reverse ? encoder.getReverseSpeed(edge.getFlags()) : encoder.getSpeed(edge.getFlags());
-        if (speed == 0)
-            return Double.POSITIVE_INFINITY;
-
-        int walk = edge.getWalkability();
-        if(walk == 0) {
-        	walk = 1;
+        if (speed == 0) {
+            return Double.POSITIVE_INFINITY;       
         }
-		double min = 0.000161410286871274;
-		double max = 1.003009027;
-		 
-		double oneoverd = 1/edge.getDistance();
-				
-		double normalised = Math.log(oneoverd) - Math.log(max) / Math.log(max - min);
-        double weight = distanceAlpha * normalised + walkabilityAlpha *walk;
-        if(weight < 0) {
-        	weight = 0;
-        }
-        return weight;
         
+        System.out.println(1000 - edge.getWalkability());
+        return 1000 - edge.getWalkability();       
     }
 
     @Override

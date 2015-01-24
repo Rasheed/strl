@@ -560,13 +560,13 @@ public class GraphHopperStorage implements GraphStorage
         }
 
         @Override
-        public int getWalkability()
+        public double getWalkability()
         {
             return edges.getInt(edgePointer + E_WALKABLE);
         }
 
         @Override
-        public EdgeIteratorState setWalkability( int value )
+        public EdgeIteratorState setWalkability( double value )
         {
             GraphHopperStorage.this.setWalkability(edgePointer, value);
             return this;
@@ -847,13 +847,13 @@ public class GraphHopperStorage implements GraphStorage
         }
 
         @Override
-        public int getWalkability()
+        public double getWalkability()
         {
             return edges.getInt(edgePointer + E_WALKABLE);
         }
 
         @Override
-        public EdgeIteratorState setWalkability( int value )
+        public EdgeIteratorState setWalkability( double value )
         {
             GraphHopperStorage.this.setWalkability(edgePointer, value);
             return this;
@@ -940,10 +940,10 @@ public class GraphHopperStorage implements GraphStorage
         return to;
     }
 
-    public void setWalkability( long edgePointer, int value )
+    public void setWalkability( long edgePointer, double value )
     {
         if (extStorage.isRequireEdgeField() && E_WALKABLE >= 0)
-            edges.setInt(edgePointer + E_WALKABLE, value);
+            edges.setInt(edgePointer + E_WALKABLE, Integer.valueOf((int) (value*100)));
         else
             throw new AssertionError("This graph does not support an additional edge field.");
     }

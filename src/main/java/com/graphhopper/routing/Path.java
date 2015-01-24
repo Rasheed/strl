@@ -527,7 +527,7 @@ public class Path
         return toString() + ", found:" + isFound() + ", " + str;
     }
 
-	public int getWalkability(Map<Integer, Integer> walkabilities) {
+	public int getWalkability(Map<Integer, Double> walkabilities) {
 		int walkability = 0;
 		System.out.println(walkabilities);
         for (int i = 0; i < edgeIds.size(); i++)

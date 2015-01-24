@@ -1,34 +1,17 @@
 package com.strl.hopper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.graphhopper.GHRequest;
-import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
-import com.graphhopper.routing.AlgorithmOptions;
-import com.graphhopper.routing.Path;
-import com.graphhopper.routing.QueryGraph;
-import com.graphhopper.routing.RoutingAlgorithm;
-import com.graphhopper.routing.StrlRoutingAlgorithm;
-import com.graphhopper.routing.util.DefaultEdgeFilter;
-import com.graphhopper.routing.util.EdgeFilter;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FlagEncoder;
-import com.graphhopper.routing.util.TraversalMode;
 import com.graphhopper.routing.util.Weighting;
 import com.graphhopper.routing.util.WeightingMap;
-import com.graphhopper.storage.index.QueryResult;
 import com.graphhopper.util.CmdArgs;
-import com.graphhopper.util.StopWatch;
-import com.graphhopper.util.shapes.GHPoint;
-import com.strl.util.WalkabilityWeighting;
+import com.strl.util.StrlWeighting;
 
 public class StrlHopper extends GraphHopper{
 	public StrlHopper() {
     	this.forServer().
-        		setOSMFile("src/main/resources/central-strl.xml")
+        		setOSMFile("src/main/resources/centrallondonstrl.xml")
         		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
         		.setInMemory()
         		.init(new CmdArgs());
@@ -37,10 +20,10 @@ public class StrlHopper extends GraphHopper{
 	
 	@Override
 	public Weighting createWeighting(WeightingMap wMap, FlagEncoder encoder) {
-		return new WalkabilityWeighting(encoder, 0.5, 0.5);
+		return new StrlWeighting(encoder);
 	}
 	
-	 protected List<Path> getPaths( GHRequest request, GHResponse rsp )
+	 /*protected List<Path> getPaths( GHRequest request, GHResponse rsp )
 	    {
 	        String vehicle = request.getVehicle();
 	        if (vehicle.isEmpty())
@@ -75,7 +58,7 @@ public class StrlHopper extends GraphHopper{
 
 	        FlagEncoder encoder = encodingManager.getEncoder(vehicle);
 	        EdgeFilter edgeFilter = new DefaultEdgeFilter(encoder);
-	        Weighting weighting = new WalkabilityWeighting(encoder, 0.5, 2);
+	        Weighting weighting = new WalkabilityWeighting(encoder);
 
 	        StopWatch sw = new StopWatch().start();
 	        List<QueryResult> qResults = new ArrayList<QueryResult>(points.size());
@@ -125,5 +108,5 @@ public class StrlHopper extends GraphHopper{
 
 	        rsp.setDebugInfo(debug);
 	        return paths;
-	    }
+	    }*/
 }
