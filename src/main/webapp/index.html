@@ -45,6 +45,8 @@
 
 <script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
 <!-- /// -->
+<script src='data/exp_centrallondonwithwalkabilitypolylines.js' ></script>
+
 <script type="text/javascript">
     var markers = new L.FeatureGroup();
     L.mapbox.accessToken = "pk.eyJ1IjoicmFzaGVlZHdpaGFpYiIsImEiOiJaOTBoMFI4In0.5rmY9BbciXR2L_8JC_CaVA";
@@ -52,6 +54,43 @@
     L.tileLayer('http://{s}.tiles.mapbox.com/v3/rasheedwihaib.kp0em92o/{z}/{x}/{y}.png', {
                 maxZoom: 18
                 }).addTo(map);
+                
+                var feature_group = new L.featureGroup([]);
+                
+                var raster_group = new L.LayerGroup([]);
+                
+                var layerOrder=new Array();
+                function pop_centrallondonwithwalkabilitypolylines(feature, layer) {
+                    
+                    
+                }
+
+                var exp_centrallondonwithwalkabilitypolylinesJSON = new L.geoJson(exp_centrallondonwithwalkabilitypolylines,{
+                                                                  onEachFeature: pop_centrallondonwithwalkabilitypolylines,
+                                                                  style: function (feature) {
+                                                                  return {weight: feature.properties.radius_qgis2leaf,
+                                                                  color: feature.properties.color_qgis2leaf,
+                                                                  opacity: feature.properties.transp_qgis2leaf,
+                                                                  fillOpacity: feature.properties.transp_qgis2leaf};
+                                                                  }
+                                                                  });
+                                                                  feature_group.addLayer(exp_centrallondonwithwalkabilitypolylinesJSON);
+                                                                  
+                                                                  //add comment sign to hide this layer on the map in the initial view.
+                                                                  exp_centrallondonwithwalkabilitypolylinesJSON.addTo(map);
+                                                                  var title = new L.Control();
+                                                                  title.onAdd = function (map) {
+                                                                      this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+                                                                      this.update();
+                                                                      return this._div;
+                                                                  };
+title.update = function () {
+    this._div.innerHTML = '<h2>Walkabilities </h2>'
+};
+title.addTo(map);
+L.control.layers({},{"Walkabilities": exp_centrallondonwithwalkabilitypolylinesJSON},{collapsed:false}).addTo(map);
+map.fitBounds(feature_group.getBounds());
+
     var i = 0;
     function onMapClick(e) {
         if(i == 2) {
