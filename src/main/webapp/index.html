@@ -93,9 +93,23 @@ L.control.layers({},{"Walkabilities": exp_centrallondonwithwalkabilitypolylinesJ
 map.fitBounds(feature_group.getBounds());
 
     var i = 0;
+    var layerControl = L.control.layers();
+
     function onMapClick(e) {
         if(i == 2) {
             markers.clearLayers();
+            for(i in map._layers) {
+                if(map._layers[i]._path != undefined) {
+                    try {
+                        map.removeLayer(map._layers[i]);
+                    }
+                    catch(e) {
+                        console.log("problem with " + e + map._layers[i]);
+                    }
+                }
+            }
+            map.removeControl(layerControl);
+            layerControl = L.control.layers();
             i=0;
         }
         var marker = L.marker(e.latlng, {riseOnHover: true});
@@ -117,7 +131,6 @@ map.fitBounds(feature_group.getBounds());
         $('#rest-result-container').hide();
         $('#rest-client-tab').click();
     }
-    var layerControl = L.control.layers().addTo(map);
 
     function sendGetRequest(markers) {
     
@@ -171,6 +184,7 @@ map.fitBounds(feature_group.getBounds());
            }
         });
         }
+        layerControl.addTo(map)
     }
 
     function showRestResults(headerText, headerClass, bodyText) {
