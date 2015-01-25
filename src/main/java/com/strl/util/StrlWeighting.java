@@ -19,6 +19,7 @@ package com.strl.util;
 
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.Weighting;
+import com.graphhopper.util.DistanceCalc;
 import com.graphhopper.util.EdgeIteratorState;
 
 /**
@@ -57,9 +58,10 @@ public class StrlWeighting implements Weighting
         if (speed == 0) {
             return Double.POSITIVE_INFINITY;       
         }
-        double weight = (1000/edge.getDistance()) + (1000 - edge.getWalkability());
-        System.out.println(weight);
-        return weight;       
+        double walkability = (edge.getWalkability() * 100) / 462.0;
+        double dist = ((5000 - edge.getDistance()) * 100 / 5000);
+        
+        return 200 - (walkability + dist);
     }
 
     @Override
