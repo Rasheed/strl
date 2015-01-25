@@ -24,19 +24,107 @@
     
         #map { position:absolute; top:0; bottom:0; width:100%; }
         #key { position:absolute; right:0;}
+    
+    
+    /*****ANIMATONS (optional)*****/
+    
+    #menu, #menu .arrow, #menu nav a {
+        transition: all 0.4s;
+        -o-transition: all 0.4s;
+        -moz-transition: all 0.4s;
+        -webkit-transition: all 0.4s;
+    }
+    
+    /*****END ANIMATONS*****/
+    
+    
+    /*****PANEL*****/
+    
+    #menu {
+        background: #EEEEEE;
+        border-right: 3px solid #ee4e1d;
+        width: 150px;
+        padding: 30px;
+        position: fixed;
+        height:100%;
+        top:0;
+        z-index: 100000;
+        
+        box-shadow: 4px 0 10px rgba(0,0,0,0.25);
+        -moz-box-shadow: 4px 0 10px rgba(0,0,0,0.25);
+        -webkit-box-shadow: 4px 0 10px rgba(0,0,0,0.25);
+    }
+    
+    #menu {
+        left: 0; /* Change to right: 0; if you want the panel to display on the right side. */
+    }
+    
+    #menu:hover, #menu:focus {
+        left: 0 !important; /* Change to right: 0 !important; if you want the panel to display on the right side. */
+    }
+    
+    #menu .arrow {
+        right: 2px; /* Change to left: 2px; if you want the panel to display on the right side. */
+    }
+    
+    #menu .arrow {
+        font: normal 400 25px/25px 'Acme', Helvetica, Arial, sans-serif; /* Acme font is required for .arrow */
+        color: rgba(0,0,0,0.75); /* Arrow color */
+        width: 16px;
+        height: 25px;
+        display: block;
+        position: absolute;
+        top: 20px;
+        cursor: default;
+    }
+    
+    #menu:hover .arrow {
+        transform: rotate(-180deg) translate(6px,-3px);
+        -moz-transform: rotate(-180deg) translate(6px,-3px);
+        -webkit-transform: rotate(-180deg) translate(6px,-3px);
+    }
+    
+    #menu nav {
+        position: relative;
+        top: 75px;
+    }
+    
+    #menu nav a {
+        padding: 10px 5px;
+        border-bottom: 1px dotted #c0c0c0;
+        display: block;
+        clear: both;
+        font: bold 13px/18px 'Open Sans', Helvetica, Arial, sans-serif;
+        color: #fff;
+        text-decoration: none;
+    }
+    
+    #menu nav a:hover {
+        color: #ee4e1d;
+    }
+    
+    /*****END PANEL*****/
     </style>
     </head>
 
 <body onload="prettyPrintOnce();">
 
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <a href="/" class="brand">Strl App</a>
-            <!--<a href="/" id="key" class="brand"><font color="red">Red: Fastest</font>, <font color="green">Green: Walkable</font>, <font color="blue">Blue: Strl</font></a>!-->
-        </div>
+<div id="menu">
+    <div class="arrow"><</div>
+        <h2>Welcome to Strl App!</h2></br>
+        
+        Click any 2 points in Central London and use the toggles on the right to see three walking routes between
+        your two chosen points.
+        <!--<nav>
+            <a href="#">Home</a>
+            <a href="#">An introduction: Design in 2012</a>
+            <a href="#">Relevant figures in design</a>
+            <a href="#">Where is design heading?</a>
+            <a href="#">Influences</a>
+            <a href="#">Video</a>
+            <a href="#">Sources</a>
+        </nav>!-->
     </div>
-</div>
 
 <!-- End CLI tab -->
 <div id="map"></div>
@@ -47,6 +135,22 @@
 <!-- /// -->
 <script src='data/exp_centrallondonwithwalkabilitypolylines.js' ></script>
 
+<script type="text/javascript">
+
+$(document).ready(function() {
+$("#menu").height($(document).height());
+});
+$(document).ready(function() {
+setTimeout( function(){$('#menu').css('left','-180px');},10000); <!-- Change 'left' to 'right' for panel to appear to the right -->
+});
+$(document).ready(function(){
+
+$(".divClass .deleteDiv").click(function(){
+$(this).parents(".divClass").animate({ opacity: 'hide' }, "slow");
+});
+
+});
+</script>
 <script type="text/javascript">
     var markers = new L.FeatureGroup();
     L.mapbox.accessToken = "pk.eyJ1IjoicmFzaGVlZHdpaGFpYiIsImEiOiJaOTBoMFI4In0.5rmY9BbciXR2L_8JC_CaVA";
@@ -85,7 +189,7 @@
                                                                       return this._div;
                                                                   };
 title.update = function () {
-    this._div.innerHTML = '<h2>Walkabilities </h2>'
+    this._div.innerHTML = '<h2></h2>'
 };
 title.addTo(map);
 
