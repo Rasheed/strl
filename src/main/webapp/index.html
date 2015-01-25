@@ -9,125 +9,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="//netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.css" rel="stylesheet">
         
-        <script src="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js"></script>
-            <link href="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css" rel="stylesheet" />
+    <script src="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css" rel="stylesheet" />
 
-
-    <!--
-    IMPORTANT:
-    This is Heroku specific styling. Remove to customize.
-    -->
-    <link href="https://heroku.github.com/template-app-bootstrap/heroku.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
     <style type="text/css">
     
         #map { position:absolute; top:0; bottom:0; width:100%; }
         #key { position:absolute; right:0;}
     
-    
-    /*****ANIMATONS (optional)*****/
-    
-    #menu, #menu .arrow, #menu nav a {
-        transition: all 0.4s;
-        -o-transition: all 0.4s;
-        -moz-transition: all 0.4s;
-        -webkit-transition: all 0.4s;
-    }
-    
-    /*****END ANIMATONS*****/
-    
-    
-    /*****PANEL*****/
-    
-    #menu {
-        background: #EEEEEE;
-        border-right: 3px solid #ee4e1d;
-        width: 150px;
-        padding: 30px;
-        position: fixed;
-        height:100%;
-        top:0;
-        z-index: 100000;
-        
-        box-shadow: 4px 0 10px rgba(0,0,0,0.25);
-        -moz-box-shadow: 4px 0 10px rgba(0,0,0,0.25);
-        -webkit-box-shadow: 4px 0 10px rgba(0,0,0,0.25);
-    }
-    
-    #menu {
-        left: 0; /* Change to right: 0; if you want the panel to display on the right side. */
-    }
-    
-    #menu:hover, #menu:focus {
-        left: 0 !important; /* Change to right: 0 !important; if you want the panel to display on the right side. */
-    }
-    
-    #menu .arrow {
-        right: 2px; /* Change to left: 2px; if you want the panel to display on the right side. */
-    }
-    
-    #menu .arrow {
-        font: normal 400 25px/25px 'Acme', Helvetica, Arial, sans-serif; /* Acme font is required for .arrow */
-        color: rgba(0,0,0,0.75); /* Arrow color */
-        width: 16px;
-        height: 25px;
-        display: block;
-        position: absolute;
-        top: 20px;
-        cursor: default;
-    }
-    
-    #menu:hover .arrow {
-        transform: rotate(-180deg) translate(6px,-3px);
-        -moz-transform: rotate(-180deg) translate(6px,-3px);
-        -webkit-transform: rotate(-180deg) translate(6px,-3px);
-    }
-    
-    #menu nav {
-        position: relative;
-        top: 75px;
-    }
-    
-    #menu nav a {
-        padding: 10px 5px;
-        border-bottom: 1px dotted #c0c0c0;
-        display: block;
-        clear: both;
-        font: bold 13px/18px 'Open Sans', Helvetica, Arial, sans-serif;
-        color: #fff;
-        text-decoration: none;
-    }
-    
-    #menu nav a:hover {
-        color: #ee4e1d;
-    }
-    
-    /*****END PANEL*****/
     </style>
     </head>
 
 <body onload="prettyPrintOnce();">
 
-<div id="menu">
-    <div class="arrow"><</div>
-        <h2>Welcome to Strl App!</h2></br>
-        
-        Click any 2 points in Central London and use the toggles on the right to see three walking routes between
-        your two chosen points.
-        <!--<nav>
-            <a href="#">Home</a>
-            <a href="#">An introduction: Design in 2012</a>
-            <a href="#">Relevant figures in design</a>
-            <a href="#">Where is design heading?</a>
-            <a href="#">Influences</a>
-            <a href="#">Video</a>
-            <a href="#">Sources</a>
-        </nav>!-->
-    </div>
+<!-- Sidebar -->
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">
+            <a href="#">
+                Start Bootstrap
+            </a>
+        </li>
+        <li>
+            <a href="#">Dashboard</a>
+        </li>
+        <li>
+            <a href="#">Shortcuts</a>
+        </li>
+        <li>
+            <a href="#">Overview</a>
+        </li>
+        <li>
+            <a href="#">Events</a>
+        </li>
+        <li>
+            <a href="#">About</a>
+        </li>
+        <li>
+            <a href="#">Services</a>
+        </li>
+        <li>
+            <a href="#">Contact</a>
+        </li>
+        <li>
+            <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+        </li>
+    </ul>
+
+</div>
+<!-- /#sidebar-wrapper -->
+
 
 <!-- End CLI tab -->
 <div id="map"></div>
+
 <!-- end Rest Client tab -->
 </div>
 
@@ -135,21 +76,23 @@
 <!-- /// -->
 <script src='data/exp_centrallondonwithwalkabilitypolylines.js' ></script>
 
-<script type="text/javascript">
 
-$(document).ready(function() {
-$("#menu").height($(document).height());
-});
-$(document).ready(function() {
-setTimeout( function(){$('#menu').css('left','-180px');},10000); <!-- Change 'left' to 'right' for panel to appear to the right -->
-});
-$(document).ready(function(){
+</div>
+<!-- /#wrapper -->
 
-$(".divClass .deleteDiv").click(function(){
-$(this).parents(".divClass").animate({ opacity: 'hide' }, "slow");
-});
+<!-- jQuery -->
+<script src="js/jquery.js"></script>
 
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+<!-- Menu Toggle Script -->
+<script>
+    $("#menu-toggle").click(function(e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
 });
+</script>
 </script>
 <script type="text/javascript">
     var markers = new L.FeatureGroup();
@@ -193,7 +136,7 @@ title.update = function () {
 };
 title.addTo(map);
 
-L.control.layers({},{"Walkabilities": exp_centrallondonwithwalkabilitypolylinesJSON},{collapsed:true}).addTo(map);
+L.control.layers({},{"Walkabilities (For Debug Use)": exp_centrallondonwithwalkabilitypolylinesJSON},{collapsed:true}).addTo(map);
 map.fitBounds(feature_group.getBounds());
 
     var i = 0;
