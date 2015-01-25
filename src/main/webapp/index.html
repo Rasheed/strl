@@ -77,7 +77,7 @@
                                                                   feature_group.addLayer(exp_centrallondonwithwalkabilitypolylinesJSON);
                                                                   
                                                                   //add comment sign to hide this layer on the map in the initial view.
-                                                                  exp_centrallondonwithwalkabilitypolylinesJSON.addTo(map);
+                                                                  //exp_centrallondonwithwalkabilitypolylinesJSON.addTo(map);
                                                                   var title = new L.Control();
                                                                   title.onAdd = function (map) {
                                                                       this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
@@ -88,7 +88,8 @@ title.update = function () {
     this._div.innerHTML = '<h2>Walkabilities </h2>'
 };
 title.addTo(map);
-L.control.layers({},{"Walkabilities": exp_centrallondonwithwalkabilitypolylinesJSON},{collapsed:false}).addTo(map);
+
+L.control.layers({},{"Walkabilities": exp_centrallondonwithwalkabilitypolylinesJSON},{collapsed:true}).addTo(map);
 map.fitBounds(feature_group.getBounds());
 
     var i = 0;
@@ -116,6 +117,7 @@ map.fitBounds(feature_group.getBounds());
         $('#rest-result-container').hide();
         $('#rest-client-tab').click();
     }
+    var layerControl = L.control.layers().addTo(map);
 
     function sendGetRequest(markers) {
     
@@ -127,6 +129,8 @@ map.fitBounds(feature_group.getBounds());
         var restful = ["","/walkable","/strl"];
         var colours = ["#FF0000","#00FF00","#0000FF"];
         var arrayLength = restful.length;
+        
+        
         for (var j = 0; j < arrayLength; j++) {
             var type = restful[j];
             var colour = colours[j];
@@ -141,19 +145,21 @@ map.fitBounds(feature_group.getBounds());
                         latlngs.push(new L.LatLng(data[i][1], data[i][0]));
                     }
                    if(j == 0) {
-                   colour = "#FF0000";
-                    var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
-                    L.control.layers({},{"Fastest": polyline},{collapsed:false}).addTo(map);
-                    map.fitBounds(polyline.getBounds());
+                        colour = "#FF0000";
+                        var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
+                        layerControl.addOverlay(polyline, "Fastest")
+                        map.fitBounds(polyline.getBounds());
                    } else if (j == 1){
                         colour = "#00FF00";
                         var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
-                        L.control.layers({},{"Most Walkable": polyline},{collapsed:false}).addTo(map);
+                        layerControl.addOverlay(polyline, "Most Walkable")
+                        //L.control.layers({},{"Most Walkable": polyline},{collapsed:false}).addTo(map);
                         map.fitBounds(polyline.getBounds());
                    } else {
                         colour = "#0000FF";
                         var polyline = L.polyline(latlngs, {color: colour}).addTo(map);
-                        L.control.layers({},{"Strl Path": polyline},{collapsed:false}).addTo(map);
+                        layerControl.addOverlay(polyline, "Strl Path")
+                        //L.control.layers({},{"Strl Path": polyline},{collapsed:false}).addTo(map);
                         map.fitBounds(polyline.getBounds());
                    }
                 },
