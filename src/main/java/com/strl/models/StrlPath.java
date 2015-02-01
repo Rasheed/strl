@@ -1,65 +1,68 @@
 package com.strl.models;
 
-import java.io.IOException;
+import java.util.List;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.CmdArgs;
-import com.graphhopper.util.PointList;
+import com.strl.hopper.StrlHopper;
 
+@XmlRootElement
 public class StrlPath {
-	private JSONObject json = new JSONObject();
-	private PointList fastestroute;
-	private double shortestdistance;
+	private List<Double[]> fastestroutepoints;
+	private List<Double[]> walkableroutepoints;
+	private List<Double[]> strlroutepoints;
 
-	public StrlPath(GHResponse response) {
-		try {
-			json = writeJson(response);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public StrlPath() {}
+	
+	public StrlPath(Double fromLat, Double fromLon, Double toLat, Double toLon) {
+		this.fastestroutepoints = getFastestRoute(fromLat, fromLon, toLat,
+				toLon);
+		this.walkableroutepoints = getWalkableRoute(fromLat, fromLon, toLat,
+				toLon);
+		this.strlroutepoints = getStrlRoute(fromLat, fromLon, toLat, toLon);
 	}
 
-	public JSONObject getJsonObject() {
-		return json;
+	private List<Double[]> getStrlRoute(Double fromLat, Double fromLon,
+			Double toLat, Double toLon) {
+		StrlHopper hopper = new StrlHopper("strl");
+		GHResponse response = hopper.route(new GHRequest(fromLat, fromLon,
+				toLat, toLon).setVehicle("foot"));
+		return response.getPoints().toGeoJson();
 	}
 
-	private JSONObject writeJson(GHResponse rsp) throws JSONException,
-			IOException {
-
-		json.append("geopoints", rsp.getPoints());
-		json.append("routedistance", rsp.getDistance());
-		//json.append("walkability", rsp.getWalkability());
-
-		return json;
+	private List<Double[]> getWalkableRoute(Double fromLat, Double fromLon,
+			Double toLat, Double toLon) {
+		StrlHopper hopper = new StrlHopper("walkability");
+		GHResponse response = hopper.route(new GHRequest(fromLat, fromLon,
+				toLat, toLon).setVehicle("foot"));
+		return response.getPoints().toGeoJson();
 	}
 
-	public StrlPath computeStandardRoute(Double fromLat, Double fromLon,
+	private List<Double[]> getFastestRoute(Double fromLat, Double fromLon,
 			Double toLat, Double toLon) {
 		GraphHopper hopper = new GraphHopper().forServer()
-				.setOSMFile("src/main/resources/test-osm.xml")
+				.setOSMFile("src/main/resources/centrallondon.osm.xml")
 				.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
 				.init(new CmdArgs());
 		hopper.importOrLoad();
 
 		GHResponse response = hopper.route(new GHRequest(fromLat, fromLon,
 				toLat, toLon).setVehicle("foot"));
-		
-		try {
-			json.append("shortestroute", response.getPoints());
-			json.append("shortestdistance", response.getDistance());
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-		return this;
+		return response.getPoints().toGeoJson();
+	}
+	
+	public List<Double[]> getFastestroutepoints() {
+		return fastestroutepoints;
+	}
+	public List<Double[]> getWalkableroutepoints() {
+		return walkableroutepoints;
+	}
+	public List<Double[]> getStrlroutepoints() {
+		return strlroutepoints;
 	}
 }
