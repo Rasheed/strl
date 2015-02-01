@@ -29,6 +29,8 @@ import com.graphhopper.storage.*;
 import com.graphhopper.storage.index.*;
 import com.graphhopper.util.*;
 import com.graphhopper.util.shapes.GHPoint;
+import com.strl.util.StrlWeighting;
+import com.strl.util.WalkabilityWeighting;
 
 import java.io.File;
 import java.io.IOException;
@@ -790,7 +792,12 @@ public class GraphHopper implements GraphHopperAPI
     {
         String weighting = wMap.getWeighting();
         Weighting result;
-
+        if ("walkability".equalsIgnoreCase(weighting)) {
+        	return new WalkabilityWeighting(encoder);
+        }
+        if("strl".equalsIgnoreCase(weighting)) {
+        	return new StrlWeighting(encoder);
+        }
         if ("shortest".equalsIgnoreCase(weighting))
         {
             result = new ShortestWeighting();

@@ -58,8 +58,7 @@ public class WalkabilityWeighting implements Weighting
             return Double.POSITIVE_INFINITY;       
         }
         
-        System.out.println(1000 - edge.getWalkability());
-        return 1000 - edge.getWalkability();       
+        return 10 - (edge.getWalkability()/100);       
     }
 
     @Override

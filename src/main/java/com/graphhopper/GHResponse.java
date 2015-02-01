@@ -17,11 +17,12 @@
  */
 package com.graphhopper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.graphhopper.util.InstructionList;
 import com.graphhopper.util.PointList;
 import com.graphhopper.util.shapes.BBox;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Wrapper to simplify output of GraphHopper.

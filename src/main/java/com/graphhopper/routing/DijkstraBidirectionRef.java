@@ -173,7 +173,7 @@ public class DijkstraBidirectionRef extends AbstractBidirAlgo
     {
         if (finishedFrom || finishedTo)
             return true;
-
+        
         return currFrom.weight + currTo.weight >= bestPath.getWeight();
     }
 

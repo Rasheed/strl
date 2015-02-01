@@ -55,28 +55,18 @@ public class Main {
 		// behavior.
 		// Read more here:
 		// http://wiki.eclipse.org/Jetty/Reference/Jetty_Classloading
-		root.setParentLoaderPriority(true);
-		StrlHopper hopper = new StrlHopper();
-		GHResponse response = hopper.route(new GHRequest(51.51245503991427,-0.1270937919616699,51.5116270804117,-0.1271367073059082));
-        		
-		System.out.println(response);
 		
-		/*GraphHopper hopper = new GraphHopper().forServer().
-        		setOSMFile("src/main/resources/centrallondon.osm.xml")
-        		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
-        		.init(new CmdArgs());
-        hopper.importOrLoad();
-
-        GHResponse response1 = hopper.route(new GHRequest(51.51245503991427,-0.1270937919616699,51.5116270804117,-0.1271367073059082));
-        System.out.println(response1);*/
-		//System.out.println(response.getPoints());
-        
+		root.setParentLoaderPriority(true);
+		StrlHopper hopper = new StrlHopper("strl");
+		GHResponse response = hopper.route(new GHRequest(51.51606049455287,-0.1336812973022461,51.514384661317756,-0.13728618621826172));
+        		
+		System.out.println(response);        
+    	printGraph(hopper.getGraph());
 
         server.setHandler(root);
 
 		server.start();
 		server.join();
-    	//printGraph(hopper.getGraph());
 	}
 	
 	public static void printGraph(GraphStorage graph) {

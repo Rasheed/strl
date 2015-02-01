@@ -27,12 +27,7 @@ public class PathService {
 			@PathParam("fromLon") Double fromLon, 
 			@PathParam("toLat") Double toLat,
 			@PathParam("toLon") Double toLon) {
-    	GraphHopper hopper = new GraphHopper().forServer().
-        		setOSMFile("src/main/resources/centrallondonstrl.xml")
-        		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
-        		.init(new CmdArgs());
-        hopper.importOrLoad();
-
+		StrlHopper hopper = new StrlHopper("strl");
         GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
         return response.getPoints().toGeoJson();
     }
@@ -44,12 +39,7 @@ public class PathService {
 			@PathParam("fromLon") Double fromLon, 
 			@PathParam("toLat") Double toLat,
 			@PathParam("toLon") Double toLon){
-		GraphHopper hopper = new GraphHopper().forServer().
-        		setOSMFile("src/main/resources/centrallondonwalkability.xml")
-        		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
-        		.init(new CmdArgs());
-		hopper.importOrLoad();
-    	
+		StrlHopper hopper = new StrlHopper("walkability");
         GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
         return response.getPoints().toGeoJson();
     }

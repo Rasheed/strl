@@ -37,6 +37,8 @@ public class StrlWeighting implements Weighting
     protected final static double SPEED_CONV = 3.6;
     protected final FlagEncoder encoder;
     private final double maxSpeed;
+	private final double MAX_WALKABILITY = 4.62;
+	private final double MAX_DISTANCE = 4413.508;
 
     public StrlWeighting( FlagEncoder encoder )
     {
@@ -57,16 +59,27 @@ public class StrlWeighting implements Weighting
     	double speed = reverse ? encoder.getReverseSpeed(edge.getFlags()) : encoder.getSpeed(edge.getFlags());
         if (speed == 0) {
             return Double.POSITIVE_INFINITY;       
-        }
-        double walkability = (edge.getWalkability() * 100) / 462.0;
-        double dist = ((5000 - edge.getDistance()) * 100 / 5000);
+        }        
+
+        double walkability = ((edge.getWalkability()/100)/MAX_WALKABILITY) * 100; 
         
-        return 200 - (walkability + dist);
+        if(walkability < 0 ) {
+        	walkability = 0;
+        }
+        
+        //System.out.println("walkability percent" + walkability);
+        double dist = ((edge.getDistance())/MAX_DISTANCE) * 100;
+        
+        //System.out.println("dist percent : "+dist);
+        double weight = (100 - (walkability)) + (dist);
+        
+        //System.out.println("weight " + weight);
+        return weight;
     }
 
     @Override
     public String toString()
     {
-        return "WALKABLE|" + encoder;
+        return "STRL|" + encoder;
     }
 }
