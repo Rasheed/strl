@@ -15,6 +15,7 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.util.CmdArgs;
 import com.strl.hopper.StrlHopper;
+import com.strl.models.StrlPath;
 
 @Path("/path")
 @Produces(MediaType.APPLICATION_JSON)
@@ -62,6 +63,26 @@ public class PathService {
     }
 	
 	@GET
+	@Path("all/{fromLat}/{fromLon}/{toLat}/{toLon}")
+	public StrlPath getAllPaths(
+			@PathParam("fromLat") Double fromLat,
+			@PathParam("fromLon") Double fromLon, 
+			@PathParam("toLat") Double toLat,
+			@PathParam("toLon") Double toLon) {
+		
+		return new StrlPath(fromLat, fromLon, toLat, toLon);
+		
+    	/*GraphHopper hopper = new GraphHopper().forServer().
+        		setOSMFile("src/main/resources/centrallondon.osm.xml")
+        		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
+        		.init(new CmdArgs());
+        hopper.importOrLoad();
+
+        GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
+        return response.getPoints().toGeoJson();*/
+    }
+	
+	@GET
 	@Path("instructions/{fromLat}/{fromLon}/{toLat}/{toLon}")
 	public List<Map<String, Object>> getInstructions(
 			@PathParam("fromLat") Double fromLat,
@@ -78,4 +99,6 @@ public class PathService {
         GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
         return response.getInstructions().createJson();
     }
+	
+	
 }
