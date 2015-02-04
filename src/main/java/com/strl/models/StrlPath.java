@@ -14,8 +14,12 @@ import com.strl.hopper.StrlHopper;
 @XmlRootElement
 public class StrlPath {
 	private List<Double[]> fastestroutepoints;
+	private double fastestRouteDistance;
 	private List<Double[]> walkableroutepoints;
+	private double walkableRouteDistance;
 	private List<Double[]> strlroutepoints;
+	private double strlRouteDistance;
+
 
 	public StrlPath() {}
 	
@@ -32,6 +36,7 @@ public class StrlPath {
 		StrlHopper hopper = new StrlHopper("strl");
 		GHResponse response = hopper.route(new GHRequest(fromLat, fromLon,
 				toLat, toLon).setVehicle("foot"));
+		this.strlRouteDistance = response.getDistance();
 		return response.getPoints().toGeoJson();
 	}
 
@@ -40,6 +45,7 @@ public class StrlPath {
 		StrlHopper hopper = new StrlHopper("walkability");
 		GHResponse response = hopper.route(new GHRequest(fromLat, fromLon,
 				toLat, toLon).setVehicle("foot"));
+		this.walkableRouteDistance = response.getDistance();
 		return response.getPoints().toGeoJson();
 	}
 
@@ -53,16 +59,26 @@ public class StrlPath {
 
 		GHResponse response = hopper.route(new GHRequest(fromLat, fromLon,
 				toLat, toLon).setVehicle("foot"));
+		this.fastestRouteDistance = response.getDistance();
 		return response.getPoints().toGeoJson();
 	}
 	
 	public List<Double[]> getFastestroutepoints() {
 		return fastestroutepoints;
 	}
+	public double getFastestRouteDistance() {
+		return fastestRouteDistance;
+	}
 	public List<Double[]> getWalkableroutepoints() {
 		return walkableroutepoints;
 	}
+	public double getWalkableRouteDistance() {
+		return walkableRouteDistance;
+	}
 	public List<Double[]> getStrlroutepoints() {
 		return strlroutepoints;
+	}
+	public double getStrlRouteDistance() {
+		return strlRouteDistance;
 	}
 }
