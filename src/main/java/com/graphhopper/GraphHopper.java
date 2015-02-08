@@ -78,7 +78,7 @@ public class GraphHopper implements GraphHopperAPI
     // for CH prepare    
     private boolean doPrepare = true;
     private boolean chEnabled = true;
-    private String chWeighting = "fastest";
+    private String chWeighting = "shortest";
     private int periodicUpdates = -1;
     private int lazyUpdates = -1;
     private int neighborUpdates = -1;

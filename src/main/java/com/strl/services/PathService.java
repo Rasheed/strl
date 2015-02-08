@@ -71,15 +71,6 @@ public class PathService {
 			@PathParam("toLon") Double toLon) {
 		
 		return new StrlPath(fromLat, fromLon, toLat, toLon);
-		
-    	/*GraphHopper hopper = new GraphHopper().forServer().
-        		setOSMFile("src/main/resources/centrallondon.osm.xml")
-        		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
-        		.init(new CmdArgs());
-        hopper.importOrLoad();
-
-        GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
-        return response.getPoints().toGeoJson();*/
     }
 	
 	@GET
