@@ -39,7 +39,7 @@ public class WalkabilityReader {
 
 	public static void main(String argv[]) {
 		GraphHopper hopper = new GraphHopper().forServer()
-				.setOSMFile("src/main/resources/centrallondon.osm.xml")
+				.setOSMFile("src/main/resources/centrallondon.xml")
 				.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
 				.setInMemory().init(new CmdArgs());
 		hopper.importOrLoad();
@@ -67,7 +67,7 @@ public class WalkabilityReader {
 
 	public void addWalkabilityToXML() {
 		try {
-			String filepath = "/Users/rasheedwihaib/prelimstrlapp/src/main/resources/centrallondon.osm.xml";
+			String filepath = "/Users/rasheedwihaib/prelimstrlapp/src/main/resources/centrallondon.xml";
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -108,7 +108,7 @@ public class WalkabilityReader {
 					System.out.println("added walkability= "+walkabilityscore+" for way "+id);
 					j++;
 					
-					System.out.println((j/size) *100 + "% completed");
+					System.out.println((j*100/size) + "% completed");
 				}
 			}
 

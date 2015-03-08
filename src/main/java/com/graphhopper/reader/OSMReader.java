@@ -56,6 +56,7 @@ import com.graphhopper.util.Helper;
 import com.graphhopper.util.PointList;
 import com.graphhopper.util.StopWatch;
 import com.graphhopper.util.shapes.GHPoint;
+import com.strl.reader.WalkabilityReader;
 
 /**
  * This class parses an OSM xml or pbf file and creates a graph from it. It does so in a two phase
@@ -212,9 +213,9 @@ public class OSMReader implements DataReader
 
                 }
             }
-            /*WalkabilityReader reader = new WalkabilityReader();
-            reader.setMap(in.map);
-            reader.setWalkabilitiesInXML();*/
+            //WalkabilityReader reader = new WalkabilityReader();
+            //reader.setMap(in.map);
+            //reader.setWalkabilitiesInXML();
             
         } catch (Exception ex)
         {

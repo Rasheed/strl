@@ -57,7 +57,7 @@ public class Main {
 		// http://wiki.eclipse.org/Jetty/Reference/Jetty_Classloading
 		
 		root.setParentLoaderPriority(true);
-		StrlHopper hopper = new StrlHopper("strl");
+		StrlHopper hopper = new StrlHopper("walkability");
 		GHResponse response = hopper.route(new GHRequest(51.51606049455287,-0.1336812973022461,51.514384661317756,-0.13728618621826172));
         		
 		System.out.println(response);        

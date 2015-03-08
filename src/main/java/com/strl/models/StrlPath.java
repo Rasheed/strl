@@ -52,7 +52,7 @@ public class StrlPath {
 	private List<Double[]> getFastestRoute(Double fromLat, Double fromLon,
 			Double toLat, Double toLon) {
 		GraphHopper hopper = new GraphHopper().forServer()
-				.setOSMFile("src/main/resources/centrallondon.osm.xml")
+				.setOSMFile("src/main/resources/centrallondon.xml")
 				.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
 				.init(new CmdArgs());
 		hopper.importOrLoad();

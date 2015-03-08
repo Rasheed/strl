@@ -53,7 +53,7 @@ public class PathService {
 			@PathParam("toLat") Double toLat,
 			@PathParam("toLon") Double toLon) {
     	GraphHopper hopper = new GraphHopper().forServer().
-        		setOSMFile("src/main/resources/centrallondon.osm.xml")
+        		setOSMFile("src/main/resources/centrallondon.xml")
         		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
         		.init(new CmdArgs());
         hopper.importOrLoad();
