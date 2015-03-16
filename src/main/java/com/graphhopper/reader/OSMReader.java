@@ -56,6 +56,7 @@ import com.graphhopper.util.Helper;
 import com.graphhopper.util.PointList;
 import com.graphhopper.util.StopWatch;
 import com.graphhopper.util.shapes.GHPoint;
+import com.strl.reader.BeautyReader;
 import com.strl.reader.WalkabilityReader;
 
 /**
@@ -213,9 +214,9 @@ public class OSMReader implements DataReader
 
                 }
             }
-            //WalkabilityReader reader = new WalkabilityReader();
-            //reader.setMap(in.map);
-            //reader.setWalkabilitiesInXML();
+            /*BeautyReader reader = new BeautyReader();
+            reader.setMap(in.map);
+            reader.setWalkabilitiesInXML();*/
             
         } catch (Exception ex)
         {

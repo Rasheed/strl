@@ -33,7 +33,7 @@ public class StrlPath {
 
 	private List<Double[]> getStrlRoute(Double fromLat, Double fromLon,
 			Double toLat, Double toLon) {
-		StrlHopper hopper = new StrlHopper("strl");
+		StrlHopper hopper = new StrlHopper("beauty");
 		GHResponse response = hopper.route(new GHRequest(fromLat, fromLon,
 				toLat, toLon).setVehicle("foot"));
 		this.strlRouteDistance = response.getDistance();

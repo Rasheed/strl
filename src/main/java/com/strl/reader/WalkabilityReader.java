@@ -112,25 +112,6 @@ public class WalkabilityReader {
 				}
 			}
 
-			// loop the staff child node
-			/*
-			 * NodeList list = staff.getChildNodes();
-			 * 
-			 * for (int i = 0; i < list.getLength(); i++) {
-			 * 
-			 * Node node = list.item(i);
-			 * 
-			 * // get the salary element, and update the value if
-			 * ("salary".equals(node.getNodeName())) {
-			 * node.setTextContent("2000000"); }
-			 * 
-			 * //remove firstname if ("firstname".equals(node.getNodeName())) {
-			 * staff.removeChild(node); }
-			 * 
-			 * }
-			 */
-
-			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -169,7 +150,7 @@ public class WalkabilityReader {
 			list.add(tsvValue);
 			dataRow = TSVFile.readLine(); // Read next line of data.
 		}
-		// Close the file once all data has been read.
+
 		TSVFile.close();
 
 		for (WalkabilityTSVValue row : list) {

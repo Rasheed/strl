@@ -28,7 +28,7 @@ public class PathService {
 			@PathParam("fromLon") Double fromLon, 
 			@PathParam("toLat") Double toLat,
 			@PathParam("toLon") Double toLon) {
-		StrlHopper hopper = new StrlHopper("strl");
+		StrlHopper hopper = new StrlHopper("beauty");
         GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
         return response.getPoints().toGeoJson();
     }

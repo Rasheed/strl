@@ -11,6 +11,7 @@ import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.Weighting;
 import com.graphhopper.routing.util.WeightingMap;
 import com.graphhopper.util.CmdArgs;
+import com.strl.util.BeautyWeighting;
 import com.strl.util.StrlWeighting;
 import com.strl.util.WalkabilityWeighting;
 
@@ -34,6 +35,8 @@ public class StrlHopper extends GraphHopper{
 	public Weighting createWeighting(WeightingMap wMap, FlagEncoder encoder) {
 		if(weighting.equalsIgnoreCase("walkability")) {
 			return new WalkabilityWeighting(encoder);
+		} else if (weighting.equalsIgnoreCase("beauty")){
+			return new BeautyWeighting(encoder);
 		} else {
 			return new StrlWeighting(encoder);
 		}
