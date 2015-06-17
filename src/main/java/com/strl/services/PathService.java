@@ -28,6 +28,18 @@ public class PathService {
 			@PathParam("fromLon") Double fromLon, 
 			@PathParam("toLat") Double toLat,
 			@PathParam("toLon") Double toLon) {
+		StrlHopper hopper = new StrlHopper("strl");
+        GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
+        return response.getPoints().toGeoJson();
+    }
+	
+	@GET
+	@Path("beauty/{fromLat}/{fromLon}/{toLat}/{toLon}")
+	public List<Double[]> getBeautyPath(
+			@PathParam("fromLat") Double fromLat,
+			@PathParam("fromLon") Double fromLon, 
+			@PathParam("toLat") Double toLat,
+			@PathParam("toLon") Double toLon) {
 		StrlHopper hopper = new StrlHopper("beauty");
         GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
         return response.getPoints().toGeoJson();
@@ -73,20 +85,37 @@ public class PathService {
 		return new StrlPath(fromLat, fromLon, toLat, toLon);
     }
 	
+	//Text Instructions
+	
 	@GET
-	@Path("instructions/{fromLat}/{fromLon}/{toLat}/{toLon}")
-	public List<Map<String, Object>> getInstructions(
+	@Path("/instructions/{fromLat}/{fromLon}/{toLat}/{toLon}")
+	public List<Map<String, Object>> getInstructionsFastest(
+			@PathParam("path") String path,
 			@PathParam("fromLat") Double fromLat,
 			@PathParam("fromLon") Double fromLon, 
 			@PathParam("toLat") Double toLat,
 			@PathParam("toLon") Double toLon) {
+		
     	GraphHopper hopper = new GraphHopper().forServer().
-        		setOSMFile("src/main/resources/central.xml")
+        		setOSMFile("src/main/resources/centrallondon.xml")
         		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
         		.init(new CmdArgs());
         hopper.importOrLoad();
 
-        //GHResponse response = hopper.route(new GHRequest(51.524559, -0.13404, 51.500729, -0.124625));
+        GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
+        return response.getInstructions().createJson();
+    }
+	
+	@GET
+	@Path("/instructions/{fromLat}/{fromLon}/{toLat}/{toLon}")
+	public List<Map<String, Object>> getInstructions(
+			@PathParam("path") String path,
+			@PathParam("fromLat") Double fromLat,
+			@PathParam("fromLon") Double fromLon, 
+			@PathParam("toLat") Double toLat,
+			@PathParam("toLon") Double toLon) {
+		
+		GraphHopper hopper = new StrlHopper(path);
         GHResponse response = hopper.route(new GHRequest(fromLat, fromLon, toLat, toLon).setVehicle("foot"));
         return response.getInstructions().createJson();
     }

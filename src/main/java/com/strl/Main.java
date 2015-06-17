@@ -58,15 +58,39 @@ public class Main {
 		
 		root.setParentLoaderPriority(true);
 		StrlHopper hopper = new StrlHopper("walkability");
-		GHResponse response = hopper.route(new GHRequest(51.51606049455287,-0.1336812973022461,51.514384661317756,-0.13728618621826172));
-        		
-		System.out.println(response);        
+		GHResponse response = hopper.route(new GHRequest(51.46733451189103,-0.23728609615458762,51.554884982590785,-0.07318072184579198));
+        	
+		printTest();
+		//System.out.println(response);        
     	printGraph(hopper.getGraph());
 
         server.setHandler(root);
 
 		server.start();
 		server.join();
+	}
+	
+	public static void printTest() {
+		GraphHopper hopper = new GraphHopper();
+		String filePath = "src/main/resources/centrallondon.xml";	
+    	hopper.forServer().
+        		setOSMFile(filePath)
+        		.setEncodingManager(new EncodingManager(EncodingManager.FOOT))
+        		.setInMemory()
+        		.init(new CmdArgs());
+    	hopper.importOrLoad();
+		StrlHopper walkabilityhopper = new StrlHopper("walkability");
+		StrlHopper strlhopper = new StrlHopper("strl");
+		GHRequest request = new GHRequest(51.46733451189103,-0.23728609615458762,51.554884982590785,-0.07318072184579198);
+		GHResponse response;
+		response = hopper.route(request);
+
+		System.out.println(response.getMillis());
+		response = walkabilityhopper.route(request);
+		System.out.println(	response.getMillis());
+		response = strlhopper.route(request);
+		System.out.println(	response.getMillis());
+
 	}
 	
 	public static void printGraph(GraphStorage graph) {
